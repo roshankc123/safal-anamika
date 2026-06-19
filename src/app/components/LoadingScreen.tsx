@@ -28,6 +28,16 @@ const BORDER_GOLD = "rgba(184,135,28,0.45)";
 const TEXT_DARK = "#2C1218";
 const GOLD = "#B8871C";
 
+function useIsMobile(breakpoint = 640) {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoint);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < breakpoint);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, [breakpoint]);
+  return isMobile;
+}
+
 function GoldDivider({ width = 120 }: { width?: number }) {
   return (
     <svg width={width} height="16" viewBox={`0 0 ${width} 16`} fill="none">
@@ -78,11 +88,22 @@ function ArchPortrait({ src, alt, size = 130 }: { src: string; alt: string; size
 
 export function LoadingScreen() {
   const [visible, setVisible] = useState(true);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const t1 = setTimeout(() => setVisible(false), 3000);
     return () => clearTimeout(t1);
   }, []);
+
+  // Scale down everything on mobile
+  const portraitSize = isMobile ? 90 : 130;
+  const nameFontSize = isMobile ? "32px" : "44px";
+  const heartSize   = isMobile ? "20px" : "28px";
+  const heartCircle = isMobile ? "58px" : "80px";
+  const centerWidth = isMobile ? "100px" : "160px";
+  const gtFontSize  = isMobile ? "20px" : "28px";
+  const dividerW    = isMobile ? 70 : 110;
+  const centerDivW  = isMobile ? 60 : 90;
 
   const panelBase: React.CSSProperties = {
     position: "absolute",
@@ -109,47 +130,55 @@ export function LoadingScreen() {
         >
           {/* Left panel — Bride */}
           <div style={{ ...panelBase, left: 0, boxShadow: "inset -6px 0 18px rgba(0,0,0,0.07)" }}>
-            <div style={{ position: "absolute", inset: "16px", border: `1px solid ${BORDER_GOLD}`, borderRight: "none", pointerEvents: "none" }} />
-            <div style={{ position: "absolute", top: 20, left: 20 }}><CornerFloral /></div>
-            <div style={{ position: "absolute", bottom: 20, left: 20, transform: "scaleY(-1)" }}><CornerFloral /></div>
+            <div style={{ position: "absolute", inset: isMobile ? "8px" : "16px", border: `1px solid ${BORDER_GOLD}`, borderRight: "none", pointerEvents: "none" }} />
+            {!isMobile && (
+              <>
+                <div style={{ position: "absolute", top: 20, left: 20 }}><CornerFloral /></div>
+                <div style={{ position: "absolute", bottom: 20, left: 20, transform: "scaleY(-1)" }}><CornerFloral /></div>
+              </>
+            )}
 
             <motion.div
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.4 }}
-              style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "14px" }}
+              style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: isMobile ? "8px" : "14px" }}
             >
-              <p style={{ fontFamily: "'Lato', sans-serif", fontSize: "9px", letterSpacing: "5px", textTransform: "uppercase", color: "rgba(184,135,28,0.65)" }}>
+              <p style={{ fontFamily: "'Lato', sans-serif", fontSize: isMobile ? "8px" : "9px", letterSpacing: "5px", textTransform: "uppercase", color: "rgba(184,135,28,0.65)" }}>
                 The Bride
               </p>
-              <ArchPortrait src={bride2} alt="Trishna" size={130} />
-              <p style={{ fontFamily: "'Great Vibes', cursive", fontSize: "44px", color: TEXT_DARK, lineHeight: 1, marginTop: "4px" }}>
+              <ArchPortrait src={bride2} alt="Trishna" size={portraitSize} />
+              <p style={{ fontFamily: "'Great Vibes', cursive", fontSize: nameFontSize, color: TEXT_DARK, lineHeight: 1, marginTop: "4px" }}>
                 Trishna
               </p>
-              <GoldDivider width={110} />
+              <GoldDivider width={dividerW} />
             </motion.div>
           </div>
 
           {/* Right panel — Groom */}
           <div style={{ ...panelBase, right: 0, boxShadow: "inset 6px 0 18px rgba(0,0,0,0.07)" }}>
-            <div style={{ position: "absolute", inset: "16px", border: `1px solid ${BORDER_GOLD}`, borderLeft: "none", pointerEvents: "none" }} />
-            <div style={{ position: "absolute", top: 20, right: 20 }}><CornerFloral flip /></div>
-            <div style={{ position: "absolute", bottom: 20, right: 20, transform: "scaleY(-1)" }}><CornerFloral flip /></div>
+            <div style={{ position: "absolute", inset: isMobile ? "8px" : "16px", border: `1px solid ${BORDER_GOLD}`, borderLeft: "none", pointerEvents: "none" }} />
+            {!isMobile && (
+              <>
+                <div style={{ position: "absolute", top: 20, right: 20 }}><CornerFloral flip /></div>
+                <div style={{ position: "absolute", bottom: 20, right: 20, transform: "scaleY(-1)" }}><CornerFloral flip /></div>
+              </>
+            )}
 
             <motion.div
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.55 }}
-              style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "14px" }}
+              style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: isMobile ? "8px" : "14px" }}
             >
-              <p style={{ fontFamily: "'Lato', sans-serif", fontSize: "9px", letterSpacing: "5px", textTransform: "uppercase", color: "rgba(184,135,28,0.65)" }}>
+              <p style={{ fontFamily: "'Lato', sans-serif", fontSize: isMobile ? "8px" : "9px", letterSpacing: "5px", textTransform: "uppercase", color: "rgba(184,135,28,0.65)" }}>
                 The Groom
               </p>
-              <ArchPortrait src={groom2} alt="Gaurav" size={130} />
-              <p style={{ fontFamily: "'Great Vibes', cursive", fontSize: "44px", color: TEXT_DARK, lineHeight: 1, marginTop: "4px" }}>
+              <ArchPortrait src={groom2} alt="Gaurav" size={portraitSize} />
+              <p style={{ fontFamily: "'Great Vibes', cursive", fontSize: nameFontSize, color: TEXT_DARK, lineHeight: 1, marginTop: "4px" }}>
                 Gaurav
               </p>
-              <GoldDivider width={110} />
+              <GoldDivider width={dividerW} />
             </motion.div>
           </div>
 
@@ -163,7 +192,7 @@ export function LoadingScreen() {
               top: 0, bottom: 0,
               left: "50%",
               transform: "translateX(-50%)",
-              width: "160px",
+              width: centerWidth,
               zIndex: 10,
               display: "flex",
               flexDirection: "column",
@@ -178,8 +207,8 @@ export function LoadingScreen() {
               background: "#FAF5EF",
               border: `1px solid ${BORDER_GOLD}`,
               borderRadius: "50%",
-              width: "80px",
-              height: "80px",
+              width: heartCircle,
+              height: heartCircle,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -189,17 +218,17 @@ export function LoadingScreen() {
               <motion.span
                 animate={{ scale: [1, 1.18, 1] }}
                 transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                style={{ fontSize: "28px", lineHeight: 1, display: "block" }}
+                style={{ fontSize: heartSize, lineHeight: 1, display: "block" }}
               >
                 ♥
               </motion.span>
             </div>
 
-            <p style={{ fontFamily: "'Great Vibes', cursive", fontSize: "28px", color: GOLD, lineHeight: 1, whiteSpace: "nowrap", margin: "12px 0 6px" }}>
+            <p style={{ fontFamily: "'Great Vibes', cursive", fontSize: gtFontSize, color: GOLD, lineHeight: 1, whiteSpace: "nowrap", margin: "12px 0 6px" }}>
               G & T
             </p>
-            <GoldDivider width={90} />
-            <p style={{ fontFamily: "'Lato', sans-serif", fontSize: "8px", letterSpacing: "3px", textTransform: "uppercase", color: "rgba(44,18,24,0.4)", marginTop: "8px", textAlign: "center", lineHeight: 1.8, whiteSpace: "nowrap" }}>
+            <GoldDivider width={centerDivW} />
+            <p style={{ fontFamily: "'Lato', sans-serif", fontSize: isMobile ? "7px" : "8px", letterSpacing: "3px", textTransform: "uppercase", color: "rgba(44,18,24,0.4)", marginTop: "8px", textAlign: "center", lineHeight: 1.8, whiteSpace: "nowrap" }}>
               6 · 7 · 8<br />July 2026
             </p>
 

@@ -21,8 +21,9 @@ function getTimeLeft(target: Date): TimeLeft {
 const ITEM_H = 40;
 
 /* Discrete flip for days / hours / minutes */
-function FlipUnit({ value, label }: { value: number; label: string }) {
+function FlipUnit({ value, label, small }: { value: number; label: string; small?: boolean }) {
   const display = String(value).padStart(2, "0");
+  const boxH = small ? ITEM_H - 10 : ITEM_H;
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
       <div
@@ -30,11 +31,11 @@ function FlipUnit({ value, label }: { value: number; label: string }) {
           background: "rgba(184,135,28,0.09)",
           border: "1px solid rgba(184,135,28,0.28)",
           borderRadius: "8px",
-          padding: "6px 14px",
-          minWidth: "62px",
+          padding: small ? "4px 8px" : "6px 14px",
+          minWidth: small ? "44px" : "62px",
           overflow: "hidden",
           position: "relative",
-          height: ITEM_H + 12,
+          height: boxH + 12,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -43,13 +44,13 @@ function FlipUnit({ value, label }: { value: number; label: string }) {
         <AnimatePresence mode="popLayout">
           <motion.span
             key={display}
-            initial={{ y: -ITEM_H, opacity: 0 }}
+            initial={{ y: -boxH, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: ITEM_H, opacity: 0 }}
+            exit={{ y: boxH, opacity: 0 }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
             style={{
               fontFamily: "'Raleway', sans-serif",
-              fontSize: "34px",
+              fontSize: small ? "22px" : "34px",
               fontWeight: 600,
               color: "#8B6914",
               display: "block",
@@ -63,11 +64,11 @@ function FlipUnit({ value, label }: { value: number; label: string }) {
       </div>
       <span style={{
         fontFamily: "'Lato', sans-serif",
-        fontSize: "10px",
-        letterSpacing: "3px",
+        fontSize: small ? "8px" : "10px",
+        letterSpacing: "2px",
         textTransform: "uppercase",
         color: "rgba(107,26,42,0.55)",
-        marginTop: "6px",
+        marginTop: "5px",
       }}>
         {label}
       </span>
@@ -76,7 +77,7 @@ function FlipUnit({ value, label }: { value: number; label: string }) {
 }
 
 /* Smooth continuous roller for seconds using rAF */
-function SmoothSecondsRoller({ targetDate }: { targetDate: Date }) {
+function SmoothSecondsRoller({ targetDate, small }: { targetDate: Date; small?: boolean }) {
   const [yOffset, setYOffset] = useState(0);
   const rafRef = useRef<number>(0);
 
@@ -96,6 +97,7 @@ function SmoothSecondsRoller({ targetDate }: { targetDate: Date }) {
     return () => cancelAnimationFrame(rafRef.current);
   }, [targetDate]);
 
+  const boxH = small ? ITEM_H - 10 : ITEM_H;
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
       <div
@@ -103,9 +105,9 @@ function SmoothSecondsRoller({ targetDate }: { targetDate: Date }) {
           background: "rgba(184,135,28,0.09)",
           border: "1px solid rgba(184,135,28,0.28)",
           borderRadius: "8px",
-          padding: "6px 14px",
-          minWidth: "62px",
-          height: ITEM_H + 12,
+          padding: small ? "4px 8px" : "6px 14px",
+          minWidth: small ? "44px" : "62px",
+          height: boxH + 12,
           overflow: "hidden",
           position: "relative",
         }}
@@ -135,7 +137,7 @@ function SmoothSecondsRoller({ targetDate }: { targetDate: Date }) {
                 alignItems: "center",
                 justifyContent: "center",
                 fontFamily: "'Raleway', sans-serif",
-                fontSize: "34px",
+                fontSize: small ? "22px" : "34px",
                 fontWeight: 600,
                 color: "#8B6914",
                 lineHeight: 1,
@@ -148,11 +150,11 @@ function SmoothSecondsRoller({ targetDate }: { targetDate: Date }) {
       </div>
       <span style={{
         fontFamily: "'Lato', sans-serif",
-        fontSize: "10px",
-        letterSpacing: "3px",
+        fontSize: small ? "8px" : "10px",
+        letterSpacing: "2px",
         textTransform: "uppercase",
         color: "rgba(107,26,42,0.55)",
-        marginTop: "6px",
+        marginTop: "5px",
       }}>
         Secs
       </span>
@@ -160,7 +162,7 @@ function SmoothSecondsRoller({ targetDate }: { targetDate: Date }) {
   );
 }
 
-export function CountdownTimer({ targetDate }: { targetDate: Date }) {
+export function CountdownTimer({ targetDate, small }: { targetDate: Date; small?: boolean }) {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(() => getTimeLeft(targetDate));
 
   useEffect(() => {
@@ -197,14 +199,14 @@ export function CountdownTimer({ targetDate }: { targetDate: Date }) {
       }}>
         Wedding day in
       </p>
-      <div style={{ display: "flex", gap: "10px", justifyContent: "center", alignItems: "flex-start" }}>
-        <FlipUnit value={timeLeft.days} label="Days" />
-        <span style={{ color: "rgba(184,135,28,0.5)", fontSize: "26px", lineHeight: "52px" }}>:</span>
-        <FlipUnit value={timeLeft.hours} label="Hours" />
-        <span style={{ color: "rgba(184,135,28,0.5)", fontSize: "26px", lineHeight: "52px" }}>:</span>
-        <FlipUnit value={timeLeft.minutes} label="Mins" />
-        <span style={{ color: "rgba(184,135,28,0.5)", fontSize: "26px", lineHeight: "52px" }}>:</span>
-        <SmoothSecondsRoller targetDate={targetDate} />
+      <div style={{ display: "flex", gap: small ? "6px" : "10px", justifyContent: "center", alignItems: "flex-start" }}>
+        <FlipUnit value={timeLeft.days} label="Days" small={small} />
+        <span style={{ color: "rgba(184,135,28,0.5)", fontSize: small ? "18px" : "26px", lineHeight: small ? "38px" : "52px" }}>:</span>
+        <FlipUnit value={timeLeft.hours} label="Hours" small={small} />
+        <span style={{ color: "rgba(184,135,28,0.5)", fontSize: small ? "18px" : "26px", lineHeight: small ? "38px" : "52px" }}>:</span>
+        <FlipUnit value={timeLeft.minutes} label="Mins" small={small} />
+        <span style={{ color: "rgba(184,135,28,0.5)", fontSize: small ? "18px" : "26px", lineHeight: small ? "38px" : "52px" }}>:</span>
+        <SmoothSecondsRoller targetDate={targetDate} small={small} />
       </div>
     </div>
   );
