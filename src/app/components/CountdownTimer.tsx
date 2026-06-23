@@ -87,10 +87,11 @@ function SmoothSecondsRoller({ targetDate, small }: { targetDate: Date; small?: 
       const totalSeconds = diff / 1000;
       const currentSecond = Math.floor(totalSeconds % 60);
       const fraction = totalSeconds % 1; // how much of this second remains (1→0)
-      // Roller: index 0 = "59", index 59 = "00"
+      // Roller: index 0 = "59", index 59 = "00".
+      // The strip is centered on its midpoint, so offset from the midpoint item.
       const index = 59 - currentSecond;
       const progress = 1 - fraction; // 0 at second start, → 1 at second end
-      setYOffset(-(index + progress) * ITEM_H);
+      setYOffset((29.5 - index - progress) * ITEM_H);
       rafRef.current = requestAnimationFrame(update);
     };
     rafRef.current = requestAnimationFrame(update);
@@ -124,7 +125,7 @@ function SmoothSecondsRoller({ targetDate, small }: { targetDate: Date; small?: 
             top: "50%",
             left: 0,
             right: 0,
-            transform: `translateY(calc(-50% + ${yOffset % (60 * ITEM_H)}px))`,
+            transform: `translateY(calc(-50% + ${yOffset}px))`,
             willChange: "transform",
           }}
         >

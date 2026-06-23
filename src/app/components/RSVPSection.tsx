@@ -3,6 +3,7 @@ import { motion, useInView, AnimatePresence } from "motion/react";
 import { useForm } from "react-hook-form";
 import confetti from "canvas-confetti";
 import emailjs from "@emailjs/browser";
+import type { CountryBucket } from "../hooks/useIpCountry";
 
 function useIsMobile(breakpoint = 768) {
   const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoint);
@@ -37,7 +38,12 @@ const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID as string;
 const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string;
 const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string;
 
-export function RSVPSection() {
+interface RSVPSectionProps {
+  locationBucket: CountryBucket;
+  countryCode: string | null;
+}
+
+export function RSVPSection({ locationBucket, countryCode }: RSVPSectionProps) {
   const titleRef = useRef<HTMLDivElement>(null);
   const titleInView = useInView(titleRef, { once: true });
   const [submitted, setSubmitted] = useState(false);
@@ -68,6 +74,8 @@ export function RSVPSection() {
           event: data.event || "all",
           guests: data.guests || "1",
           message: data.message || "(no message)",
+          location_bucket: locationBucket,
+          ip_country_code: countryCode ?? "unknown",
         },
         PUBLIC_KEY
       );
@@ -306,7 +314,26 @@ export function RSVPSection() {
               {/* Phone */}
               <div>
                 <label style={labelStyle}>Phone Number</label>
-                <input {...register("phone")} placeholder="Your contact number" style={inputStyle} />
+                <input
+                  {...register("phone")}
+                  placeholder={locationBucket === "nepal" ? "+977 98XXXXXXXX" : "+XX your contact number"}
+                  style={inputStyle}
+                />
+              </div>
+
+              <div
+                style={{
+                  fontFamily: "'Lato', sans-serif",
+                  fontSize: "11px",
+                  letterSpacing: "1px",
+                  color: "rgba(44,18,24,0.6)",
+                  marginTop: "-8px",
+                  textAlign: "center",
+                }}
+              >
+                {locationBucket === "nepal"
+                  ? "Detected region: Nepal"
+                  : "Detected region: Outside Nepal"}
               </div>
 
               {/* Attendance */}

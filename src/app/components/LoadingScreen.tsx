@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import bride2 from "../../imports/bride_2.jpg";
-import groom2 from "../../imports/groom_2.jpg";
+import groom2 from "../../imports/groom_1.png";
 
 const CARD_BG = `
   linear-gradient(135deg, rgba(255,255,255,0.6) 0%, transparent 60%),

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import audioSrc from "../../imports/La_Vie_en_rose_-_E_dith_Piaf.mp3";
 
 function useIsMobile(breakpoint = 768) {
   const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoint);
@@ -18,11 +17,14 @@ interface Song {
   src: string;
 }
 
-const SONGS: Song[] = [
-  { title: "La Vie en Rose", artist: "Édith Piaf", src: audioSrc },
-  { title: "Can't Help Falling in Love", artist: "Elvis Presley", src: audioSrc },
-  { title: "At Last", artist: "Etta James", src: audioSrc },
-];
+interface BackgroundMusicProps {
+  songs: Song[];
+}
+
+const START_VOLUME = 0.03;
+const COMFORTABLE_VOLUME = 0.28;
+const VOLUME_RAMP_MS = 6000;
+const VOLUME_RAMP_STEP_MS = 120;
 
 const btnBase: CSSProperties = {
   background: "none",
@@ -38,20 +40,63 @@ const btnBase: CSSProperties = {
   lineHeight: 1,
 };
 
-export function BackgroundMusic() {
+export function BackgroundMusic({ songs }: BackgroundMusicProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const volumeRampRef = useRef<number | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [showPlaylist, setShowPlaylist] = useState(false);
   const isMobile = useIsMobile();
 
-  const currentSong = SONGS[currentIndex];
+  if (songs.length === 0) return null;
+
+  const currentSong = songs[currentIndex];
+
+  const clearVolumeRamp = () => {
+    if (volumeRampRef.current !== null) {
+      window.clearInterval(volumeRampRef.current);
+      volumeRampRef.current = null;
+    }
+  };
+
+  const startVolumeRamp = (audio: HTMLAudioElement, from: number, to: number) => {
+    clearVolumeRamp();
+
+    const safeFrom = Math.max(0, Math.min(1, from));
+    const safeTo = Math.max(0, Math.min(1, to));
+    const steps = Math.max(1, Math.round(VOLUME_RAMP_MS / VOLUME_RAMP_STEP_MS));
+    const stepSize = (safeTo - safeFrom) / steps;
+
+    audio.volume = safeFrom;
+
+    let step = 0;
+    volumeRampRef.current = window.setInterval(() => {
+      step += 1;
+      const nextVolume = safeFrom + stepSize * step;
+      audio.volume = Math.max(0, Math.min(1, nextVolume));
+
+      if (step >= steps) {
+        audio.volume = safeTo;
+        clearVolumeRamp();
+      }
+    }, VOLUME_RAMP_STEP_MS);
+  };
+
+  useEffect(() => {
+    if (currentIndex >= songs.length) {
+      setCurrentIndex(0);
+    }
+  }, [songs.length, currentIndex]);
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
-    audio.volume = 0.35;
-    audio.play().then(() => setPlaying(true)).catch(() => {});
+    startVolumeRamp(audio, START_VOLUME, COMFORTABLE_VOLUME);
+    audio.play().then(() => setPlaying(true)).catch(() => { });
+
+    return () => {
+      clearVolumeRamp();
+    };
   }, []);
 
   useEffect(() => {
@@ -60,21 +105,31 @@ export function BackgroundMusic() {
     audio.src = currentSong.src;
     audio.load();
     if (playing) audio.play().catch(() => setPlaying(false));
-  }, [currentIndex]);
+  }, [currentIndex, currentSong.src]);
 
   const toggle = () => {
     const audio = audioRef.current;
     if (!audio) return;
-    if (playing) { audio.pause(); setPlaying(false); }
-    else { audio.play(); setPlaying(true); }
+    if (playing) {
+      clearVolumeRamp();
+      audio.pause();
+      setPlaying(false);
+    } else {
+      audio.play()
+        .then(() => {
+          setPlaying(true);
+          startVolumeRamp(audio, audio.volume || START_VOLUME, COMFORTABLE_VOLUME);
+        })
+        .catch(() => setPlaying(false));
+    }
   };
 
   const next = () => {
-    setCurrentIndex(prev => (prev + 1) % SONGS.length);
+    setCurrentIndex(prev => (prev + 1) % songs.length);
   };
 
   const prev = () => {
-    setCurrentIndex(prev => (prev - 1 + SONGS.length) % SONGS.length);
+    setCurrentIndex(prev => (prev - 1 + songs.length) % songs.length);
   };
 
   const selectSong = (index: number) => {
@@ -82,8 +137,14 @@ export function BackgroundMusic() {
     if (!audio) return;
     setCurrentIndex(index);
     setShowPlaylist(false);
-    audio.play();
-    setPlaying(true);
+    audio.play()
+      .then(() => {
+        setPlaying(true);
+        if (audio.volume < COMFORTABLE_VOLUME) {
+          startVolumeRamp(audio, audio.volume || START_VOLUME, COMFORTABLE_VOLUME);
+        }
+      })
+      .catch(() => setPlaying(false));
   };
 
   return (
@@ -91,7 +152,9 @@ export function BackgroundMusic() {
       <audio
         ref={audioRef}
         preload="auto"
-        onEnded={next}
+        autoPlay
+        playsInline
+        loop
       />
 
       <div style={{
@@ -134,7 +197,7 @@ export function BackgroundMusic() {
               }}>
                 ♪ Now Playing
               </p>
-              {SONGS.map((song, index) => {
+              {songs.map((song, index) => {
                 const active = index === currentIndex;
                 return (
                   <button
