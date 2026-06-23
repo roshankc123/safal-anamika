@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RSVP — Safal & Anamika</title>
+  <title>RSVP Confirmation — Safal & Anamika</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Lato:wght@300;400;700&display=swap"
     rel="stylesheet" />
@@ -16,11 +16,9 @@
       background-color: #fdf5ee;
       font-family: 'Lato', Arial, sans-serif;
     ">
-  <!-- Outer wrapper -->
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #fdf5ee; padding: 24px 12px">
     <tr>
       <td align="center">
-        <!-- Email card -->
         <table width="560" cellpadding="0" cellspacing="0" border="0" style="
               max-width: 560px;
               width: 100%;
@@ -34,10 +32,8 @@
           <tr>
             <td align="center" style="
                   background: linear-gradient(135deg, #6b1a2a 0%, #2c1218 100%);
-                  padding: 36px 24px 28px;
-                  position: relative;
+                  padding: 40px 24px 28px;
                 ">
-              <!-- Gold divider top -->
               <div style="
                     height: 1px;
                     width: 80px;
@@ -50,19 +46,6 @@
                     );
                   "></div>
 
-              <!-- eyebrow -->
-              <p style="
-                    font-family: 'Lato', Arial, sans-serif;
-                    font-size: 9px;
-                    letter-spacing: 4px;
-                    text-transform: uppercase;
-                    color: rgba(184, 135, 28, 0.85);
-                    margin: 0 0 10px;
-                  ">
-                New RSVP Received
-              </p>
-
-              <!-- Script heading -->
               <p style="
                     font-family: 'Great Vibes', cursive;
                     font-size: 42px;
@@ -70,22 +53,19 @@
                     margin: 0 0 4px;
                     line-height: 1.1;
                   ">
-                Safal &amp; Anamika
+                Thank You!
               </p>
 
-              <!-- Date -->
               <p style="
                     font-family: 'Cormorant Garamond', Georgia, serif;
                     font-style: italic;
-                    font-size: 14px;
+                    font-size: 15px;
                     color: rgba(255, 255, 255, 0.6);
                     margin: 0;
-                    letter-spacing: 1px;
                   ">
-                1 · 2 · 3 &nbsp; July 2026
+                Your RSVP has been received
               </p>
 
-              <!-- Gold divider bottom -->
               <div style="
                     height: 1px;
                     width: 80px;
@@ -100,20 +80,35 @@
             </td>
           </tr>
 
+          <!-- ───── GREETING ───── -->
+          <tr>
+            <td style="padding: 32px 24px 8px">
+              <p style="
+                    font-family: 'Cormorant Garamond', Georgia, serif;
+                    font-style: italic;
+                    font-size: 20px;
+                    color: #6b1a2a;
+                    text-align: center;
+                    margin: 0 0 4px;
+                  ">
+                Dear {{name}},
+              </p>
+            </td>
+          </tr>
+
           <!-- ───── ATTENDANCE BADGE ───── -->
           <tr>
-            <td align="center" style="padding: 24px 24px 0">
-
+            <td align="center" style="padding: 0 24px 20px">
               <table cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td align="center" style="
-                        background: linear-gradient(135deg, #b8871c, #c0395a);
+                        background: #6b1a2a;
                         border-radius: 50px;
                         padding: 7px 22px;
                       ">
                     <span style="
                           font-family: 'Lato', Arial, sans-serif;
-                          font-size: 10px;
+                          font-size: 11px;
                           font-weight: 700;
                           letter-spacing: 2.5px;
                           text-transform: uppercase;
@@ -127,165 +122,34 @@
             </td>
           </tr>
 
-          <!-- ───── BODY CONTENT ───── -->
+          <!-- ───── BODY ───── -->
           <tr>
-            <td style="padding: 24px 24px 0">
-              <!-- Intro sentence -->
+            <td style="padding: 0 24px 20px">
               <p style="
                     font-family: 'Cormorant Garamond', Georgia, serif;
                     font-style: italic;
-                    font-size: 15px;
-                    color: rgba(44, 18, 24, 0.65);
+                    font-size: 16px;
+                    color: rgba(44, 18, 24, 0.7);
                     text-align: center;
-                    margin: 0 0 28px;
-                    line-height: 1.6;
+                    line-height: 1.8;
+                    margin: 0;
                   ">
-                Someone just responded to your wedding invitation.
-                <br />Here are the details:
+                {{body_message}}
               </p>
+            </td>
+          </tr>
 
-              <!-- ── Detail rows ── -->
-
-              <!-- Name -->
+          <!-- ───── SUMMARY CARD ───── -->
+          {{#if summary_show}}
+          <tr>
+            <td style="padding: 0 24px 24px">
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="
                     border: 1.5px solid rgba(184, 135, 28, 0.18);
                     border-radius: 12px;
                     overflow: hidden;
-                    margin-bottom: 10px;
                   ">
                 <tr style="background: #fff8f2">
-                  <td width="30%" style="
-                        padding: 12px 14px;
-                        border-right: 1px solid rgba(184, 135, 28, 0.15);
-                      ">
-                    <span style="
-                          font-family: 'Lato', Arial, sans-serif;
-                          font-size: 8px;
-                          letter-spacing: 2px;
-                          text-transform: uppercase;
-                          color: rgba(107, 26, 42, 0.55);
-                          font-weight: 700;
-                        ">Name</span>
-                  </td>
-                  <td style="padding: 12px 14px">
-                    <span style="
-                          font-family: 'Lato', Arial, sans-serif;
-                          font-size: 14px;
-                          color: #2c1218;
-                          font-weight: 600;
-                        ">{{name}}</span>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- Phone -->
-              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="
-                    border: 1.5px solid rgba(184, 135, 28, 0.18);
-                    border-radius: 12px;
-                    overflow: hidden;
-                    margin-bottom: 10px;
-                  ">
-                <tr style="background: #ffffff">
-                  <td width="30%" style="
-                        padding: 12px 14px;
-                        border-right: 1px solid rgba(184, 135, 28, 0.15);
-                      ">
-                    <span style="
-                          font-family: 'Lato', Arial, sans-serif;
-                          font-size: 8px;
-                          letter-spacing: 2px;
-                          text-transform: uppercase;
-                          color: rgba(107, 26, 42, 0.55);
-                          font-weight: 700;
-                        ">Phone</span>
-                  </td>
-                  <td style="padding: 12px 14px">
-                    <span style="
-                          font-family: 'Lato', Arial, sans-serif;
-                          font-size: 14px;
-                          color: #2c1218;
-                        ">{{phone}}</span>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- Events -->
-              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="
-                    border: 1.5px solid rgba(184, 135, 28, 0.18);
-                    border-radius: 12px;
-                    overflow: hidden;
-                    margin-bottom: 10px;
-                  ">
-                <tr style="background: #fff8f2">
-                  <td width="30%" style="
-                        padding: 12px 14px;
-                        border-right: 1px solid rgba(184, 135, 28, 0.15);
-                      ">
-                    <span style="
-                          font-family: 'Lato', Arial, sans-serif;
-                          font-size: 8px;
-                          letter-spacing: 2px;
-                          text-transform: uppercase;
-                          color: rgba(107, 26, 42, 0.55);
-                          font-weight: 700;
-                        ">Events</span>
-                  </td>
-                  <td style="padding: 12px 14px">
-                    <span style="
-                          font-family: 'Lato', Arial, sans-serif;
-                          font-size: 14px;
-                          color: #2c1218;
-                        ">{{event}}</span>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- Guests -->
-              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="
-                    border: 1.5px solid rgba(184, 135, 28, 0.18);
-                    border-radius: 12px;
-                    overflow: hidden;
-                    margin-bottom: 10px;
-                  ">
-                <tr style="background: #ffffff">
-                  <td width="30%" style="
-                        padding: 12px 14px;
-                        border-right: 1px solid rgba(184, 135, 28, 0.15);
-                      ">
-                    <span style="
-                          font-family: 'Lato', Arial, sans-serif;
-                          font-size: 8px;
-                          letter-spacing: 2px;
-                          text-transform: uppercase;
-                          color: rgba(107, 26, 42, 0.55);
-                          font-weight: 700;
-                        ">Guests</span>
-                  </td>
-                  <td style="padding: 12px 14px">
-                    <span style="
-                          font-family: 'Lato', Arial, sans-serif;
-                          font-size: 14px;
-                          color: #2c1218;
-                        ">{{guests}}</span>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- Message (only show if filled) -->
-              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="
-                    border: 1.5px solid rgba(184, 135, 28, 0.18);
-                    border-radius: 12px;
-                    overflow: hidden;
-                    margin-bottom: 28px;
-                  ">
-                <tr style="
-                      background: linear-gradient(
-                        135deg,
-                        rgba(184, 135, 28, 0.04),
-                        rgba(192, 57, 90, 0.04)
-                      );
-                    ">
-                  <td style="padding: 14px">
+                  <td style="padding: 14px 18px; text-align: center;">
                     <p style="
                           font-family: 'Lato', Arial, sans-serif;
                           font-size: 8px;
@@ -293,20 +157,140 @@
                           text-transform: uppercase;
                           color: rgba(107, 26, 42, 0.55);
                           font-weight: 700;
-                          margin: 0 0 8px;
+                          margin: 0 0 6px;
                         ">
-                      Message
+                      Events you'll attend
                     </p>
                     <p style="
                           font-family: 'Cormorant Garamond', Georgia, serif;
-                          font-style: italic;
-                          font-size: 15px;
-                          color: rgba(44, 18, 24, 0.75);
-                          line-height: 1.7;
+                          font-size: 16px;
+                          color: #2c1218;
                           margin: 0;
                         ">
-                      "{{message}}"
+                      {{events_summary}}
                     </p>
+                    <p style="
+                          font-family: 'Lato', Arial, sans-serif;
+                          font-size: 11px;
+                          color: rgba(44, 18, 24, 0.5);
+                          margin: 6px 0 0;
+                        ">
+                      Guests (including you): <strong>{{guests}}</strong>
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          {{/if}}
+
+          <!-- ───── WEDDING DETAILS ───── -->
+          <tr>
+            <td style="padding: 0 24px 8px">
+              <p style="
+                    font-family: 'Lato', Arial, sans-serif;
+                    font-size: 8px;
+                    letter-spacing: 2.5px;
+                    text-transform: uppercase;
+                    color: rgba(107, 26, 42, 0.45);
+                    text-align: center;
+                    margin: 0 0 14px;
+                  ">
+                — Save the Date —
+              </p>
+
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="
+                    border: 1.5px solid rgba(184, 135, 28, 0.18);
+                    border-radius: 12px;
+                    overflow: hidden;
+                    margin-bottom: 12px;
+                  ">
+                <tr style="background: #ffffff">
+                  <td width="30%" style="
+                        padding: 10px 14px;
+                        border-right: 1px solid rgba(184, 135, 28, 0.15);
+                      ">
+                    <span style="
+                          font-family: 'Lato', Arial, sans-serif;
+                          font-size: 8px;
+                          letter-spacing: 2px;
+                          text-transform: uppercase;
+                          color: rgba(107, 26, 42, 0.55);
+                          font-weight: 700;
+                        ">Dates</span>
+                  </td>
+                  <td style="padding: 10px 14px">
+                    <span style="
+                          font-family: 'Cormorant Garamond', Georgia, serif;
+                          font-size: 14px;
+                          color: #2c1218;
+                        ">
+                      1 · 2 · 3 July 2026
+                    </span>
+                  </td>
+                </tr>
+              </table>
+
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="
+                    border: 1.5px solid rgba(184, 135, 28, 0.18);
+                    border-radius: 12px;
+                    overflow: hidden;
+                    margin-bottom: 12px;
+                  ">
+                <tr style="background: #fff8f2">
+                  <td width="30%" style="
+                        padding: 10px 14px;
+                        border-right: 1px solid rgba(184, 135, 28, 0.15);
+                      ">
+                    <span style="
+                          font-family: 'Lato', Arial, sans-serif;
+                          font-size: 8px;
+                          letter-spacing: 2px;
+                          text-transform: uppercase;
+                          color: rgba(107, 26, 42, 0.55);
+                          font-weight: 700;
+                        ">Venue</span>
+                  </td>
+                  <td style="padding: 10px 14px">
+                    <span style="
+                          font-family: 'Cormorant Garamond', Georgia, serif;
+                          font-size: 14px;
+                          color: #2c1218;
+                        ">
+                      Khaireni Party Palace
+                    </span>
+                  </td>
+                </tr>
+              </table>
+
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="
+                    border: 1.5px solid rgba(184, 135, 28, 0.18);
+                    border-radius: 12px;
+                    overflow: hidden;
+                    margin-bottom: 12px;
+                  ">
+                <tr style="background: #ffffff">
+                  <td width="30%" style="
+                        padding: 10px 14px;
+                        border-right: 1px solid rgba(184, 135, 28, 0.15);
+                      ">
+                    <span style="
+                          font-family: 'Lato', Arial, sans-serif;
+                          font-size: 8px;
+                          letter-spacing: 2px;
+                          text-transform: uppercase;
+                          color: rgba(107, 26, 42, 0.55);
+                          font-weight: 700;
+                        ">Location</span>
+                  </td>
+                  <td style="padding: 10px 14px">
+                    <span style="
+                          font-family: 'Lato', Arial, sans-serif;
+                          font-size: 13px;
+                          color: #2c1218;
+                        ">
+                      Aanboo Khaireni, Tanahun, Nepal
+                    </span>
                   </td>
                 </tr>
               </table>
@@ -331,11 +315,9 @@
           <!-- ───── FOOTER ───── -->
           <tr>
             <td align="center" style="padding: 24px 24px 32px">
-              <!-- Petal ornament -->
               <p style="font-size: 20px; margin: 0 0 10px; line-height: 1">
-                🌸
+                💝
               </p>
-
               <p style="
                     font-family: 'Great Vibes', cursive;
                     font-size: 28px;
@@ -345,7 +327,6 @@
                   ">
                 With love,
               </p>
-
               <p style="
                     font-family: 'Lato', Arial, sans-serif;
                     font-size: 9px;
@@ -355,14 +336,12 @@
                     margin: 0;
                     line-height: 1.4;
                   ">
-                Safal &amp; Anamika Wedding Website
+                Safal &amp; Anamika
               </p>
             </td>
           </tr>
         </table>
-        <!-- /email card -->
 
-        <!-- Sub-note -->
         <p style="
               font-family: 'Lato', Arial, sans-serif;
               font-size: 10px;
@@ -371,7 +350,8 @@
               margin: 16px 0 0;
               line-height: 1.4;
             ">
-          This email was automatically sent via the wedding RSVP form.
+          If anything changes, you can reach us directly or submit another RSVP
+          via the wedding website.
         </p>
       </td>
     </tr>

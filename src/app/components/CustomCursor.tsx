@@ -27,7 +27,7 @@ export function CustomCursor() {
 
   return (
     <>
-      {/* Main G♥T cursor */}
+      {/* Main S♥A cursor */}
       <motion.div
         className="fixed top-0 left-0 pointer-events-none z-[9999] flex items-center select-none"
         style={{ gap: "3px" }}
@@ -47,7 +47,7 @@ export function CustomCursor() {
             textShadow: "0 0 10px rgba(212,175,55,0.6)",
           }}
         >
-          G
+          S
         </span>
         <motion.span
           style={{ fontSize: "16px", lineHeight: 1 }}
@@ -68,7 +68,7 @@ export function CustomCursor() {
             textShadow: "0 0 10px rgba(212,175,55,0.6)",
           }}
         >
-          T
+          A
         </span>
       </motion.div>
 

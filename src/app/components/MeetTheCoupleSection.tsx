@@ -1,11 +1,11 @@
 import { useRef } from "react";
 import { motion, useInView } from "motion/react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import bride1 from "../../imports/bride_1.png";
-import bride2 from "../../imports/bride_2.png";
-import groom1 from "../../imports/groom_1.png";
-import groom2 from "../../imports/groom_2.png";
-import groom3 from "../../imports/groom_3.png";
+import bride1 from "../../imports/bride_1.jpg";
+import bride2 from "../../imports/bride_2.jpg";
+import groom1 from "../../imports/groom_1.jpg";
+import groom2 from "../../imports/groom_2.jpg";
+import groom3 from "../../imports/groom_3.jpg";
 
 function Portrait({
   src,
@@ -150,7 +150,7 @@ export function MeetTheCoupleSection() {
             marginBottom: "32px",
           }}
         >
-          Trishna
+          Anamika
         </motion.p>
         <div
           style={{
@@ -198,7 +198,7 @@ export function MeetTheCoupleSection() {
             marginBottom: "32px",
           }}
         >
-          Gaurav
+          Safal
         </motion.p>
         <div
           style={{

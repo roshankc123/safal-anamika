@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import bride2 from "../../imports/bride_2.png";
-import groom2 from "../../imports/groom_2.png";
+import bride2 from "../../imports/bride_2.jpg";
+import groom2 from "../../imports/groom_2.jpg";
 
 const CARD_BG = `
   linear-gradient(135deg, rgba(255,255,255,0.6) 0%, transparent 60%),
@@ -98,12 +98,12 @@ export function LoadingScreen() {
   // Scale down everything on mobile
   const portraitSize = isMobile ? 90 : 130;
   const nameFontSize = isMobile ? "32px" : "44px";
-  const heartSize   = isMobile ? "20px" : "28px";
+  const heartSize = isMobile ? "20px" : "28px";
   const heartCircle = isMobile ? "58px" : "80px";
   const centerWidth = isMobile ? "100px" : "160px";
-  const gtFontSize  = isMobile ? "20px" : "28px";
-  const dividerW    = isMobile ? 70 : 110;
-  const centerDivW  = isMobile ? 60 : 90;
+  const gtFontSize = isMobile ? "20px" : "28px";
+  const dividerW = isMobile ? 70 : 110;
+  const centerDivW = isMobile ? 60 : 90;
 
   const panelBase: React.CSSProperties = {
     position: "absolute",
@@ -130,7 +130,7 @@ export function LoadingScreen() {
         >
           {/* Left panel — Bride */}
           <div style={{ ...panelBase, left: 0, boxShadow: "inset -6px 0 18px rgba(0,0,0,0.07)" }}>
-          {/* Left panel inner border — desktop only */}
+            {/* Left panel inner border — desktop only */}
             {!isMobile && (
               <div style={{ position: "absolute", inset: "16px", border: `1px solid ${BORDER_GOLD}`, borderRight: "none", pointerEvents: "none" }} />
             )}
@@ -150,9 +150,9 @@ export function LoadingScreen() {
               <p style={{ fontFamily: "'Lato', sans-serif", fontSize: isMobile ? "8px" : "9px", letterSpacing: "5px", textTransform: "uppercase", color: "rgba(184,135,28,0.65)" }}>
                 The Bride
               </p>
-              <ArchPortrait src={bride2} alt="Trishna" size={portraitSize} />
+              <ArchPortrait src={bride2} alt="Anamika" size={portraitSize} />
               <p style={{ fontFamily: "'Great Vibes', cursive", fontSize: nameFontSize, color: TEXT_DARK, lineHeight: 1, marginTop: "4px" }}>
-                Trishna
+                Anamika
               </p>
               <GoldDivider width={dividerW} />
             </motion.div>
@@ -160,7 +160,7 @@ export function LoadingScreen() {
 
           {/* Right panel — Groom */}
           <div style={{ ...panelBase, right: 0, boxShadow: "inset 6px 0 18px rgba(0,0,0,0.07)" }}>
-          {/* Right panel inner border — desktop only */}
+            {/* Right panel inner border — desktop only */}
             {!isMobile && (
               <div style={{ position: "absolute", inset: "16px", border: `1px solid ${BORDER_GOLD}`, borderLeft: "none", pointerEvents: "none" }} />
             )}
@@ -180,9 +180,9 @@ export function LoadingScreen() {
               <p style={{ fontFamily: "'Lato', sans-serif", fontSize: isMobile ? "8px" : "9px", letterSpacing: "5px", textTransform: "uppercase", color: "rgba(184,135,28,0.65)" }}>
                 The Groom
               </p>
-              <ArchPortrait src={groom2} alt="Gaurav" size={portraitSize} />
+              <ArchPortrait src={groom2} alt="Safal" size={portraitSize} />
               <p style={{ fontFamily: "'Great Vibes', cursive", fontSize: nameFontSize, color: TEXT_DARK, lineHeight: 1, marginTop: "4px" }}>
-                Gaurav
+                Safal
               </p>
               <GoldDivider width={dividerW} />
             </motion.div>
@@ -260,11 +260,11 @@ export function LoadingScreen() {
                   </motion.span>
                 </div>
                 <p style={{ fontFamily: "'Great Vibes', cursive", fontSize: gtFontSize, color: GOLD, lineHeight: 1, whiteSpace: "nowrap", margin: "12px 0 6px" }}>
-                  G & T
+                  S & A
                 </p>
                 <GoldDivider width={centerDivW} />
                 <p style={{ fontFamily: "'Lato', sans-serif", fontSize: "8px", letterSpacing: "3px", textTransform: "uppercase", color: "rgba(44,18,24,0.4)", marginTop: "8px", textAlign: "center", lineHeight: 1.8, whiteSpace: "nowrap" }}>
-                  6 · 7 · 8<br />July 2026
+                  1 · 2 · 3<br />July 2026
                 </p>
                 <div style={{ width: "1px", flex: 1, background: `linear-gradient(to top, transparent, ${BORDER_GOLD})`, marginTop: "12px" }} />
               </>

@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { CountdownTimer } from "./CountdownTimer";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import brideImg from "../../imports/bride_1.png";
-import groomImg from "../../imports/groom_1.png";
+import brideImg from "../../imports/bride_1.jpg";
+import groomImg from "../../imports/groom_1.jpg";
 
 function useScrollOffset(speed: number) {
   const [offset, setOffset] = useState(0);
@@ -262,7 +262,7 @@ export function HeroSection() {
             </p>
 
             <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "6px" }}>
-              {["Gaurav", "♥", "Trishna"].map((word, i) => (
+              {["Safal", "♥", "Anamika"].map((word, i) => (
                 <motion.span
                   key={word}
                   initial={{ opacity: 0, y: 20 }}
@@ -324,7 +324,7 @@ export function HeroSection() {
                 textTransform: "uppercase",
               }}
             >
-              6 · 7 · 8 July 2026
+              1 · 2 · 3 July 2026
             </p>
 
             <CountdownTimer targetDate={WEDDING_DATE} small />
@@ -438,7 +438,7 @@ export function HeroSection() {
             </p>
 
             <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px" }}>
-              {["Gaurav", "♥", "Trishna"].map((word, i) => (
+              {["Safal", "♥", "Anamika"].map((word, i) => (
                 <motion.span
                   key={word}
                   initial={{ opacity: 0, y: 30 }}
@@ -502,7 +502,7 @@ export function HeroSection() {
                 textAlign: "center",
               }}
             >
-              6 · 7 · 8 July 2026
+              1 · 2 · 3 July 2026
             </p>
 
             <CountdownTimer targetDate={WEDDING_DATE} />

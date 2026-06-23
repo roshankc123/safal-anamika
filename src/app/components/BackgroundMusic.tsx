@@ -1,115 +1,314 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import audioSrc from "../../imports/La_Vie_en_rose_-_E_dith_Piaf.mp3";
 
+interface Song {
+  title: string;
+  artist: string;
+  src: string;
+}
+
+const SONGS: Song[] = [
+  { title: "La Vie en Rose", artist: "Édith Piaf", src: audioSrc },
+  { title: "Can't Help Falling in Love", artist: "Elvis Presley", src: audioSrc },
+  { title: "At Last", artist: "Etta James", src: audioSrc },
+];
+
+const btnBase: CSSProperties = {
+  background: "none",
+  border: "none",
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: "#6B5B3D",
+  borderRadius: "6px",
+  transition: "background 0.15s",
+  padding: 0,
+  lineHeight: 1,
+};
+
 export function BackgroundMusic() {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
-  const [showTooltip, setShowTooltip] = useState(false);
+  const [showPlaylist, setShowPlaylist] = useState(false);
+
+  const currentSong = SONGS[currentIndex];
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
     audio.volume = 0.35;
-    audio.loop = true;
-    // Attempt autoplay; browsers may block it until user interaction
-    audio.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+    audio.play().then(() => setPlaying(true)).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.src = currentSong.src;
+    audio.load();
+    if (playing) audio.play().catch(() => setPlaying(false));
+  }, [currentIndex]);
 
   const toggle = () => {
     const audio = audioRef.current;
     if (!audio) return;
-    if (playing) {
-      audio.pause();
-      setPlaying(false);
-    } else {
-      audio.play();
-      setPlaying(true);
-    }
+    if (playing) { audio.pause(); setPlaying(false); }
+    else { audio.play(); setPlaying(true); }
+  };
+
+  const next = () => {
+    setCurrentIndex(prev => (prev + 1) % SONGS.length);
+  };
+
+  const prev = () => {
+    setCurrentIndex(prev => (prev - 1 + SONGS.length) % SONGS.length);
+  };
+
+  const selectSong = (index: number) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    setCurrentIndex(index);
+    setShowPlaylist(false);
+    audio.play();
+    setPlaying(true);
   };
 
   return (
     <>
-      <audio ref={audioRef} src={audioSrc} preload="auto" />
+      <audio
+        ref={audioRef}
+        preload="auto"
+        onEnded={next}
+      />
 
-      {/* Floating music button */}
-      <motion.button
-        onClick={toggle}
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-        initial={{ opacity: 0, scale: 0.5 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 2, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        whileHover={{ scale: 1.12 }}
-        whileTap={{ scale: 0.92 }}
-        style={{
-          position: "fixed",
-          bottom: "28px",
-          right: "28px",
-          zIndex: 9990,
-          width: "48px",
-          height: "48px",
-          borderRadius: "50%",
-          border: "1.5px solid rgba(184,135,28,0.45)",
-          background: "rgba(255,255,255,0.85)",
-          backdropFilter: "blur(12px)",
-          boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          cursor: "pointer",
-          padding: 0,
-        }}
-      >
-        {/* Vinyl / note icon */}
-        {playing ? (
-          <motion.span
-            key="playing"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-            style={{ fontSize: "22px", display: "inline-block" }}
-          >
-            🎵
-          </motion.span>
-        ) : (
-          <motion.span
-            key="paused"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            style={{ fontSize: "20px" }}
-          >
-            🔇
-          </motion.span>
-        )}
-      </motion.button>
+      <div style={{
+        position: "fixed",
+        bottom: "28px",
+        right: "28px",
+        zIndex: 9990,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-end",
+        gap: "10px",
+      }}>
+        {/* Playlist panel */}
+        <AnimatePresence>
+          {showPlaylist && (
+            <motion.div
+              initial={{ opacity: 0, y: 12, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 8, scale: 0.96 }}
+              transition={{ duration: 0.18, ease: "easeOut" }}
+              style={{
+                background: "rgba(255,255,255,0.94)",
+                backdropFilter: "blur(20px)",
+                borderRadius: "16px",
+                border: "1px solid rgba(184,135,28,0.2)",
+                padding: "8px",
+                minWidth: "220px",
+                boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+                overflow: "hidden",
+              }}
+            >
+              <p style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: "12px",
+                color: "#8B6B15",
+                margin: "4px 0 6px 10px",
+                fontWeight: 600,
+                letterSpacing: "0.5px",
+                textTransform: "uppercase",
+              }}>
+                ♪ Now Playing
+              </p>
+              {SONGS.map((song, index) => {
+                const active = index === currentIndex;
+                return (
+                  <button
+                    key={index}
+                    onClick={() => selectSong(index)}
+                    onMouseEnter={e => { if (!active) e.currentTarget.style.background = "rgba(0,0,0,0.04)"; }}
+                    onMouseLeave={e => { if (!active) e.currentTarget.style.background = ""; }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      padding: "8px 10px",
+                      border: "none",
+                      borderRadius: "10px",
+                      background: active ? "rgba(184,135,28,0.1)" : "transparent",
+                      cursor: "pointer",
+                      textAlign: "left",
+                      width: "100%",
+                      transition: "background 0.15s",
+                    }}
+                  >
+                    <span style={{
+                      fontSize: "10px",
+                      color: active ? "#B8871C" : "#ccc",
+                      flexShrink: 0,
+                      width: "14px",
+                      textAlign: "center",
+                    }}>
+                      {active ? "▶" : "○"}
+                    </span>
+                    <div style={{ minWidth: 0 }}>
+                      <p style={{
+                        margin: 0,
+                        fontFamily: "'Cormorant Garamond', serif",
+                        fontSize: "14px",
+                        color: "#2D1810",
+                        fontWeight: active ? 600 : 400,
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}>
+                        {song.title}
+                      </p>
+                      <p style={{
+                        margin: 0,
+                        fontFamily: "'Lato', sans-serif",
+                        fontSize: "10px",
+                        color: "#8B7355",
+                      }}>
+                        {song.artist}
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-      {/* Tooltip */}
-      <AnimatePresence>
-        {showTooltip && (
-          <motion.div
-            initial={{ opacity: 0, x: 10 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 10 }}
+        {/* Mini player bar */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 2, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 0,
+            background: "rgba(255,255,255,0.88)",
+            backdropFilter: "blur(14px)",
+            borderRadius: "28px",
+            border: "1.5px solid rgba(184,135,28,0.3)",
+            boxShadow: "0 4px 24px rgba(0,0,0,0.1)",
+            height: "48px",
+            overflow: "hidden",
+          }}
+        >
+          {/* Play / Pause circle */}
+          <motion.button
+            onClick={toggle}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.9 }}
             style={{
-              position: "fixed",
-              bottom: "36px",
-              right: "86px",
-              zIndex: 9989,
-              background: "rgba(255,255,255,0.92)",
-              backdropFilter: "blur(10px)",
-              border: "1px solid rgba(184,135,28,0.25)",
-              borderRadius: "10px",
-              padding: "6px 14px",
-              boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
-              whiteSpace: "nowrap",
+              ...btnBase,
+              width: "48px",
+              height: "48px",
+              borderRadius: "50%",
+              fontSize: "22px",
+              flexShrink: 0,
             }}
           >
-            <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: "13px", color: "#6B1A2A", margin: 0 }}>
-              La Vie en Rose · Édith Piaf
+            {playing ? (
+              <motion.span
+                key="spin"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                style={{ display: "inline-block", lineHeight: 1 }}
+              >
+                🎵
+              </motion.span>
+            ) : (
+              <span style={{ lineHeight: 1 }}>🔇</span>
+            )}
+          </motion.button>
+
+          {/* Prev */}
+          <button
+            onClick={prev}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(0,0,0,0.06)"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = ""; }}
+            style={{
+              ...btnBase,
+              fontSize: "12px",
+              width: "28px",
+              height: "28px",
+              flexShrink: 0,
+              marginLeft: 2,
+            }}
+          >
+            ⏮
+          </button>
+
+          {/* Song info — click to open playlist */}
+          <button
+            onClick={() => setShowPlaylist(prev => !prev)}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(0,0,0,0.04)"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = ""; }}
+            style={{
+              ...btnBase,
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: 0,
+              padding: "0 10px",
+              borderRadius: "8px",
+              minWidth: 0,
+              maxWidth: "160px",
+            }}
+          >
+            <p style={{
+              margin: 0,
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: "13px",
+              color: "#2D1810",
+              fontStyle: "italic",
+              lineHeight: 1.3,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "100%",
+            }}>
+              {currentSong.title}
             </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <p style={{
+              margin: 0,
+              fontFamily: "'Lato', sans-serif",
+              fontSize: "9px",
+              color: "#8B7355",
+              lineHeight: 1.2,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "100%",
+            }}>
+              {currentSong.artist}
+            </p>
+          </button>
+
+          {/* Next */}
+          <button
+            onClick={next}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(0,0,0,0.06)"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = ""; }}
+            style={{
+              ...btnBase,
+              fontSize: "12px",
+              width: "28px",
+              height: "28px",
+              flexShrink: 0,
+              marginRight: 6,
+            }}
+          >
+            ⏭
+          </button>
+        </motion.div>
+      </div>
     </>
   );
 }

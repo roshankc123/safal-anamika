@@ -9,6 +9,7 @@ import { WeddingDetailsSection } from "./components/WeddingDetailsSection";
 import { MeetTheCoupleSection } from "./components/MeetTheCoupleSection";
 import { RSVPSection } from "./components/RSVPSection";
 import { FooterSection } from "./components/FooterSection";
+import { SectionDivider } from "./components/SectionDivider";
 
 export default function App() {
   useEffect(() => {
@@ -31,10 +32,15 @@ export default function App() {
       <FloatingPetals />
       <main>
         <HeroSection />
+        <SectionDivider from="#FFF5F8" to="#FFF8F2" />
         <OurStorySection />
+        <SectionDivider from="#FFF8F2" to="#FFF5F8" />
         <WeddingDetailsSection />
+        <SectionDivider from="#FFF5F8" to="#FFF8F2" />
         <MeetTheCoupleSection />
+        <SectionDivider from="#FDF5EF" to="#FFF8F2" />
         <RSVPSection />
+        <SectionDivider from="#FDF5EE" to="#3D1020" />
         <FooterSection />
       </main>
     </div>

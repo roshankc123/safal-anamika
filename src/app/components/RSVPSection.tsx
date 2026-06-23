@@ -23,9 +23,9 @@ function fireConfetti() {
   }, 300);
 }
 
-const SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID  as string;
+const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID as string;
 const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string;
-const PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY  as string;
+const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string;
 
 export function RSVPSection() {
   const titleRef = useRef<HTMLDivElement>(null);
@@ -50,13 +50,13 @@ export function RSVPSection() {
         SERVICE_ID,
         TEMPLATE_ID,
         {
-          name:             data.name,
-          phone:            data.phone || "—",
-          attendance:       data.attendance,
+          name: data.name,
+          phone: data.phone || "—",
+          attendance: data.attendance,
           attendance_label: data.attendance === "yes" ? "✓ Attending" : "✗ Not Attending",
-          event:            data.event  || "all",
-          guests:           data.guests || "1",
-          message:          data.message || "(no message)",
+          event: data.event || "all",
+          guests: data.guests || "1",
+          message: data.message || "(no message)",
         },
         PUBLIC_KEY
       );
@@ -153,6 +153,47 @@ export function RSVPSection() {
           }}
         />
       </div>
+
+      {/* Personal note from the couple */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.25, duration: 0.8 }}
+        style={{
+          maxWidth: "480px",
+          margin: "0 auto 40px",
+          textAlign: "center",
+          padding: "0 8px",
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontStyle: "italic",
+            fontSize: "17px",
+            color: "rgba(44,18,24,0.7)",
+            lineHeight: 1.8,
+            margin: "0 0 12px",
+          }}
+        >
+          "We've been counting the days, and our hearts are full knowing
+          we'll be surrounded by the people we love most. Bring your
+          appetite for daal bhat and your best dance moves — it's going
+          to be a celebration to remember."
+        </p>
+        <p
+          style={{
+            fontFamily: "'Great Vibes', cursive",
+            fontSize: "22px",
+            color: "#6B1A2A",
+            margin: 0,
+            lineHeight: 1,
+          }}
+        >
+          — Safal &amp; Anamika
+        </p>
+      </motion.div>
 
       {/* Form card */}
       <motion.div
@@ -300,11 +341,11 @@ export function RSVPSection() {
                     backgroundPosition: "right 14px center",
                   }}
                 >
-                  <option value="all">All three days (6, 7 &amp; 8 July)</option>
-                  <option value="mehendi">Mehendi only (6 July)</option>
-                  <option value="wedding">Wedding only (7 July)</option>
-                  <option value="reception">Reception only (8 July)</option>
-                  <option value="wedding+reception">Wedding &amp; Reception (7 &amp; 8 July)</option>
+                  <option value="all">All three days (1, 2 &amp; 3 July)</option>
+                  <option value="mehendi">Mehendi only (1 July)</option>
+                  <option value="wedding">Wedding only (2 July)</option>
+                  <option value="reception">Reception only (3 July)</option>
+                  <option value="wedding+reception">Wedding &amp; Reception (2 &amp; 3 July)</option>
                 </select>
               </div>
 

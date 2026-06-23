@@ -67,7 +67,7 @@ export function FooterSection() {
         }}
       />
 
-      {/* G ♥ T monogram */}
+      {/* S ♥ A monogram */}
       <motion.div
         initial={{ opacity: 0, scale: 0.7 }}
         whileInView={{ opacity: 1, scale: 1 }}
@@ -85,7 +85,7 @@ export function FooterSection() {
               textShadow: "0 0 30px rgba(212,175,55,0.3)",
             }}
           >
-            G
+            S
           </span>
           <motion.span
             animate={{ scale: [1, 1.2, 1] }}
@@ -109,7 +109,7 @@ export function FooterSection() {
               textShadow: "0 0 30px rgba(212,175,55,0.3)",
             }}
           >
-            T
+            A
           </span>
         </div>
       </motion.div>
@@ -149,7 +149,7 @@ export function FooterSection() {
           zIndex: 1,
         }}
       >
-        6 · 7 · 8 July 2026 · Rupandehi, Nepal
+        1 · 2 · 3 July 2026 · Aanboo Khaireni, Nepal
       </motion.p>
 
       {/* Ornament */}
@@ -217,8 +217,8 @@ export function FooterSection() {
           zIndex: 1,
         }}
       >
-        <p>Mehendi &amp; Wedding — Hotel Pauwa, Janakinagar, Tillottama, Rupandehi</p>
-        <p>Reception — Butwal Chamber of Commerce &amp; Industry Hall, Rupandehi</p>
+        <p>Mehendi &amp; Wedding — Khaireni Party Palace, Aanboo Khaireni, Tanahun, Nepal</p>
+        <p>Reception — Khaireni Party Palace, Aanboo Khaireni, Tanahun, Nepal</p>
       </motion.div>
 
       <div
