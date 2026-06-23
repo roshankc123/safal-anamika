@@ -43,8 +43,10 @@ const btnBase: CSSProperties = {
 export function BackgroundMusic({ songs }: BackgroundMusicProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const volumeRampRef = useRef<number | null>(null);
+  const shouldPlayOnSourceChangeRef = useRef(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
+  const [muted, setMuted] = useState(false);
   const [showPlaylist, setShowPlaylist] = useState(false);
   const isMobile = useIsMobile();
 
@@ -91,6 +93,8 @@ export function BackgroundMusic({ songs }: BackgroundMusicProps) {
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
+
+    shouldPlayOnSourceChangeRef.current = true;
     startVolumeRamp(audio, START_VOLUME, COMFORTABLE_VOLUME);
     audio.play().then(() => setPlaying(true)).catch(() => { });
 
@@ -102,9 +106,23 @@ export function BackgroundMusic({ songs }: BackgroundMusicProps) {
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
+
+    audio.muted = muted;
+  }, [muted]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
     audio.src = currentSong.src;
     audio.load();
-    if (playing) audio.play().catch(() => setPlaying(false));
+
+    const shouldPlay = playing || shouldPlayOnSourceChangeRef.current;
+    shouldPlayOnSourceChangeRef.current = false;
+
+    if (shouldPlay) {
+      audio.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+    }
   }, [currentIndex, currentSong.src]);
 
   const toggle = () => {
@@ -124,6 +142,15 @@ export function BackgroundMusic({ songs }: BackgroundMusicProps) {
     }
   };
 
+  const toggleMute = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const nextMuted = !muted;
+    audio.muted = nextMuted;
+    setMuted(nextMuted);
+  };
+
   const next = () => {
     setCurrentIndex(prev => (prev + 1) % songs.length);
   };
@@ -133,18 +160,16 @@ export function BackgroundMusic({ songs }: BackgroundMusicProps) {
   };
 
   const selectSong = (index: number) => {
-    const audio = audioRef.current;
-    if (!audio) return;
+    shouldPlayOnSourceChangeRef.current = true;
     setCurrentIndex(index);
     setShowPlaylist(false);
-    audio.play()
-      .then(() => {
-        setPlaying(true);
-        if (audio.volume < COMFORTABLE_VOLUME) {
-          startVolumeRamp(audio, audio.volume || START_VOLUME, COMFORTABLE_VOLUME);
-        }
-      })
-      .catch(() => setPlaying(false));
+
+    const audio = audioRef.current;
+    if (audio && audio.volume < COMFORTABLE_VOLUME) {
+      startVolumeRamp(audio, audio.volume || START_VOLUME, COMFORTABLE_VOLUME);
+    }
+
+    setPlaying(true);
   };
 
   return (
@@ -282,26 +307,34 @@ export function BackgroundMusic({ songs }: BackgroundMusicProps) {
             whileTap={{ scale: 0.9 }}
             style={{
               ...btnBase,
-              width: "48px",
-              height: "48px",
+              width: "40px",
+              height: "40px",
               borderRadius: "50%",
-              fontSize: "22px",
+              fontSize: "16px",
               flexShrink: 0,
             }}
           >
-            {playing ? (
-              <motion.span
-                key="spin"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                style={{ display: "inline-block", lineHeight: 1 }}
-              >
-                🎵
-              </motion.span>
-            ) : (
-              <span style={{ lineHeight: 1 }}>🔇</span>
-            )}
+            {playing ? <span style={{ lineHeight: 1 }}>⏸</span> : <span style={{ lineHeight: 1 }}>▶</span>}
           </motion.button>
+
+          {/* Mute / Unmute */}
+          <button
+            onClick={toggleMute}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(0,0,0,0.06)"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = ""; }}
+            style={{
+              ...btnBase,
+              fontSize: "12px",
+              width: "28px",
+              height: "28px",
+              flexShrink: 0,
+              marginLeft: 2,
+            }}
+            aria-label={muted ? "Unmute" : "Mute"}
+            title={muted ? "Unmute" : "Mute"}
+          >
+            {muted ? "🔇" : "🔊"}
+          </button>
 
           {/* Prev */}
           <button
