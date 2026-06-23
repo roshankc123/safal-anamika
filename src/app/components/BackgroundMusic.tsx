@@ -176,6 +176,7 @@ export function BackgroundMusic({ songs }: BackgroundMusicProps) {
     <>
       <audio
         ref={audioRef}
+        src={currentSong.src}
         preload="auto"
         autoPlay
         playsInline
