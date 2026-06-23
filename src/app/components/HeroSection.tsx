@@ -25,7 +25,7 @@ function useIsMobile(breakpoint = 768) {
   return isMobile;
 }
 
-const WEDDING_DATE = new Date("2026-07-07T00:00:00");
+const WEDDING_DATE = new Date("2026-07-02T00:00:00");
 
 export function HeroSection() {
   const bgOffset = useScrollOffset(0.35);
