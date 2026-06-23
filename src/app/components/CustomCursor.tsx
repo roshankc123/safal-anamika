@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 
+const isTouchDevice = typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0);
+
 export function CustomCursor() {
   const [pos, setPos] = useState({ x: -200, y: -200 });
   const [clicking, setClicking] = useState(false);
   const [hovering, setHovering] = useState(false);
+
+  if (isTouchDevice) return null;
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {

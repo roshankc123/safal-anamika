@@ -1,5 +1,15 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "motion/react";
+
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoint);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < breakpoint);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, [breakpoint]);
+  return isMobile;
+}
 
 const EVENTS = [
   {
@@ -44,7 +54,7 @@ const EVENTS = [
   },
 ];
 
-function EventCard({ event, index }: { event: (typeof EVENTS)[0]; index: number }) {
+function EventCard({ event, index, isMobile }: { event: (typeof EVENTS)[0]; index: number; isMobile: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
 
@@ -54,14 +64,14 @@ function EventCard({ event, index }: { event: (typeof EVENTS)[0]; index: number 
       initial={{ opacity: 0, y: 60 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ delay: index * 0.18, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -8, scale: 1.02 }}
+      whileHover={isMobile ? {} : { y: -8, scale: 1.02 }}
       style={{
         flex: "1 1 280px",
         maxWidth: "360px",
         background: event.bg,
         border: `1.5px solid ${event.accent}33`,
         borderRadius: "20px",
-        padding: "36px 28px",
+        padding: isMobile ? "28px 20px" : "36px 28px",
         boxShadow: event.featured
           ? `0 8px 40px ${event.glow}, 0 0 0 1px ${event.accent}22`
           : `0 4px 20px rgba(0,0,0,0.06), 0 0 0 1px ${event.accent}15`,
@@ -85,12 +95,12 @@ function EventCard({ event, index }: { event: (typeof EVENTS)[0]; index: number 
         }}
       />
 
-      <div style={{ fontSize: "40px", marginBottom: "16px" }}>{event.emoji}</div>
+      <div style={{ fontSize: isMobile ? "32px" : "40px", marginBottom: isMobile ? "12px" : "16px" }}>{event.emoji}</div>
 
       <h3
         style={{
           fontFamily: "'Great Vibes', cursive",
-          fontSize: "48px",
+          fontSize: isMobile ? "36px" : "48px",
           color: event.accent,
           lineHeight: 1,
           marginBottom: "6px",
@@ -175,13 +185,14 @@ function EventCard({ event, index }: { event: (typeof EVENTS)[0]; index: number 
 export function WeddingDetailsSection() {
   const titleRef = useRef<HTMLDivElement>(null);
   const titleInView = useInView(titleRef, { once: true });
+  const isMobile = useIsMobile();
 
   return (
     <section
       id="details"
       style={{
         background: "linear-gradient(180deg, #FFF5F8 0%, #FFF8F2 50%, #FFF5F8 100%)",
-        padding: "100px 24px",
+        padding: isMobile ? "60px 16px" : "100px 24px",
         position: "relative",
         overflow: "hidden",
       }}
@@ -200,7 +211,7 @@ export function WeddingDetailsSection() {
       />
 
       {/* Header */}
-      <div ref={titleRef} style={{ textAlign: "center", marginBottom: "70px" }}>
+      <div ref={titleRef} style={{ textAlign: "center", marginBottom: isMobile ? "48px" : "70px" }}>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={titleInView ? { opacity: 1, y: 0 } : {}}
@@ -221,7 +232,7 @@ export function WeddingDetailsSection() {
           transition={{ delay: 0.15 }}
           style={{
             fontFamily: "'Great Vibes', cursive",
-            fontSize: "72px",
+            fontSize: isMobile ? "42px" : "72px",
             color: "#6B1A2A",
             lineHeight: 1,
           }}
@@ -248,7 +259,7 @@ export function WeddingDetailsSection() {
           transition={{ delay: 0.4, duration: 0.8 }}
           style={{
             height: "1px",
-            width: "180px",
+            width: isMobile ? "120px" : "180px",
             margin: "16px auto 0",
             background: "linear-gradient(to right, transparent, #B8871C, transparent)",
           }}
@@ -262,12 +273,12 @@ export function WeddingDetailsSection() {
           margin: "0 auto",
           display: "flex",
           flexWrap: "wrap",
-          gap: "28px",
+          gap: isMobile ? "20px" : "28px",
           justifyContent: "center",
         }}
       >
         {EVENTS.map((event, i) => (
-          <EventCard key={event.name} event={event} index={i} />
+          <EventCard key={event.name} event={event} index={i} isMobile={isMobile} />
         ))}
       </div>
 

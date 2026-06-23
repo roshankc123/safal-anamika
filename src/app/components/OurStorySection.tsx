@@ -1,5 +1,15 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "motion/react";
+
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoint);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < breakpoint);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, [breakpoint]);
+  return isMobile;
+}
 
 const MILESTONES = [
   {
@@ -44,10 +54,107 @@ const MILESTONES = [
   },
 ];
 
-function MilestoneCard({ item, index }: { item: (typeof MILESTONES)[0]; index: number }) {
+function MilestoneCard({ item, index, isMobile }: { item: (typeof MILESTONES)[0]; index: number; isMobile: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
   const isLeft = index % 2 === 0;
+
+  if (isMobile) {
+    return (
+      <div
+        ref={ref}
+        style={{
+          position: "relative",
+          marginBottom: "28px",
+        }}
+      >
+        {/* Icon centered on the line */}
+        <div style={{
+          position: "absolute",
+          left: "50%",
+          top: "20px",
+          transform: "translateX(-50%)",
+          zIndex: 10,
+        }}>
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={inView ? { scale: 1, opacity: 1 } : {}}
+            transition={{ delay: 0.15, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              width: "36px",
+              height: "36px",
+              borderRadius: "50%",
+              background: item.iconBg,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "14px",
+              boxShadow: `0 4px 14px ${item.iconShadow}, 0 0 0 4px rgba(255,255,255,0.9)`,
+            }}
+          >
+            <motion.span
+              animate={inView ? { rotate: [0, 15, -10, 8, -5, 0] } : {}}
+              transition={{ delay: 0.4, duration: 0.8, ease: "easeInOut" }}
+              style={{ display: "inline-block", lineHeight: 1 }}
+            >
+              {item.icon}
+            </motion.span>
+          </motion.div>
+        </div>
+
+        {/* Full-width card */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          style={{
+            background: "#fff",
+            border: `1.5px solid ${item.accent}33`,
+            borderRadius: "14px",
+            padding: "44px 20px 20px",
+            boxShadow: `0 4px 20px rgba(0,0,0,0.06), 0 0 0 1px ${item.accent}15`,
+            textAlign: "center",
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontStyle: "italic",
+              fontSize: "10px",
+              letterSpacing: "2px",
+              textTransform: "uppercase",
+              color: item.accent,
+              margin: "0 0 4px",
+            }}
+          >
+            {item.subtitle}
+          </p>
+          <h3
+            style={{
+              fontFamily: "'Great Vibes', cursive",
+              fontSize: "26px",
+              color: "#2C1218",
+              lineHeight: 1.1,
+              margin: "0 0 8px",
+            }}
+          >
+            {item.title}
+          </h3>
+          <p
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: "13px",
+              lineHeight: 1.7,
+              color: "rgba(44,18,24,0.65)",
+              margin: 0,
+            }}
+          >
+            {item.description}
+          </p>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -136,7 +243,7 @@ function MilestoneCard({ item, index }: { item: (typeof MILESTONES)[0]; index: n
   );
 }
 
-function CardContent({ item }: { item: (typeof MILESTONES)[0] }) {
+function CardContent({ item, isMobile }: { item: (typeof MILESTONES)[0]; isMobile?: boolean }) {
   return (
     <>
       <p
@@ -155,10 +262,10 @@ function CardContent({ item }: { item: (typeof MILESTONES)[0] }) {
       <h3
         style={{
           fontFamily: "'Great Vibes', cursive",
-          fontSize: "36px",
+          fontSize: isMobile ? "28px" : "36px",
           color: "#2C1218",
           lineHeight: 1.1,
-          marginBottom: "12px",
+          marginBottom: isMobile ? "8px" : "12px",
         }}
       >
         {item.title}
@@ -166,7 +273,7 @@ function CardContent({ item }: { item: (typeof MILESTONES)[0] }) {
       <p
         style={{
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: "15px",
+          fontSize: isMobile ? "14px" : "15px",
           lineHeight: 1.8,
           color: "rgba(44,18,24,0.65)",
         }}
@@ -180,13 +287,14 @@ function CardContent({ item }: { item: (typeof MILESTONES)[0] }) {
 export function OurStorySection() {
   const titleRef = useRef<HTMLDivElement>(null);
   const titleInView = useInView(titleRef, { once: true });
+  const isMobile = useIsMobile();
 
   return (
     <section
       id="story"
       style={{
         background: "linear-gradient(180deg, #FFF8F2 0%, #FDF5EE 50%, #FFF8F2 100%)",
-        padding: "100px 24px",
+        padding: isMobile ? "60px 16px" : "100px 24px",
         position: "relative",
         overflow: "hidden",
       }}
@@ -201,7 +309,7 @@ export function OurStorySection() {
       />
 
       {/* Header */}
-      <div ref={titleRef} style={{ textAlign: "center", marginBottom: "80px" }}>
+      <div ref={titleRef} style={{ textAlign: "center", marginBottom: isMobile ? "48px" : "80px" }}>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={titleInView ? { opacity: 1, y: 0 } : {}}
@@ -222,7 +330,7 @@ export function OurStorySection() {
           transition={{ delay: 0.15, duration: 0.7 }}
           style={{
             fontFamily: "'Great Vibes', cursive",
-            fontSize: "72px",
+            fontSize: isMobile ? "42px" : "72px",
             color: "#6B1A2A",
             lineHeight: 1,
           }}
@@ -235,22 +343,22 @@ export function OurStorySection() {
           transition={{ delay: 0.4, duration: 0.8 }}
           style={{
             height: "1px",
-            width: "180px",
+            width: isMobile ? "120px" : "180px",
             margin: "16px auto 0",
             background: "linear-gradient(to right, transparent, #B8871C, transparent)",
           }}
         />
       </div>
 
-      {/* Timeline wrapper — the vertical line is a background on this container */}
+      {/* Timeline wrapper */}
       <div
         style={{
-          maxWidth: "960px",
+          maxWidth: isMobile ? "480px" : "960px",
           margin: "0 auto",
           position: "relative",
         }}
       >
-        {/* Centered vertical line — sits inside the 80px center column */}
+        {/* Vertical center line */}
         <div
           style={{
             position: "absolute",
@@ -263,7 +371,7 @@ export function OurStorySection() {
         />
 
         {MILESTONES.map((item, i) => (
-          <MilestoneCard key={item.title} item={item} index={i} />
+          <MilestoneCard key={item.title} item={item} index={i} isMobile={isMobile} />
         ))}
       </div>
     </section>

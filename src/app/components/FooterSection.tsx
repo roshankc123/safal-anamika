@@ -1,5 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
+
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoint);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < breakpoint);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, [breakpoint]);
+  return isMobile;
+}
 
 const NAV_LINKS = [
   { label: "Home", href: "#home" },
@@ -10,11 +20,13 @@ const NAV_LINKS = [
 ];
 
 export function FooterSection() {
+  const isMobile = useIsMobile();
+
   return (
     <footer
       style={{
         background: "linear-gradient(180deg, #3D1020 0%, #1A0510 100%)",
-        padding: "80px 24px 48px",
+        padding: isMobile ? "48px 16px 32px" : "80px 24px 48px",
         position: "relative",
         overflow: "hidden",
         textAlign: "center",
@@ -34,7 +46,7 @@ export function FooterSection() {
       />
 
       {/* Twinkling stars */}
-      {Array.from({ length: 40 }).map((_, i) => (
+      {Array.from({ length: isMobile ? 20 : 40 }).map((_, i) => (
         <motion.div
           key={i}
           style={{
@@ -61,7 +73,7 @@ export function FooterSection() {
         style={{
           height: "1px",
           background: "linear-gradient(to right, transparent, rgba(212,175,55,0.3), transparent)",
-          marginBottom: "60px",
+          marginBottom: isMobile ? "40px" : "60px",
           position: "relative",
           zIndex: 1,
         }}
@@ -79,7 +91,7 @@ export function FooterSection() {
           <span
             style={{
               fontFamily: "'Great Vibes', cursive",
-              fontSize: "90px",
+              fontSize: isMobile ? "56px" : "90px",
               color: "#D4AF37",
               lineHeight: 1,
               textShadow: "0 0 30px rgba(212,175,55,0.3)",
@@ -91,7 +103,7 @@ export function FooterSection() {
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
             style={{
-              fontSize: "44px",
+              fontSize: isMobile ? "28px" : "44px",
               color: "#E8B4C0",
               lineHeight: 1,
               filter: "drop-shadow(0 0 12px rgba(232,180,192,0.5))",
@@ -103,7 +115,7 @@ export function FooterSection() {
           <span
             style={{
               fontFamily: "'Great Vibes', cursive",
-              fontSize: "90px",
+              fontSize: isMobile ? "56px" : "90px",
               color: "#D4AF37",
               lineHeight: 1,
               textShadow: "0 0 30px rgba(212,175,55,0.3)",

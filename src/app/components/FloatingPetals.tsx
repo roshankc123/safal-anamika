@@ -36,6 +36,8 @@ export function FloatingPetals() {
     Array.from({ length: 28 }, (_, i) => makePetal(i))
   );
 
+  const petalPath = "M0,0 C12,-8 28,6 22,22 C16,38 -2,42 -8,28 C-14,14 -12,8 0,0Z";
+
   return (
     <div className="fixed inset-0 pointer-events-none z-10 overflow-hidden">
       <style>{`
@@ -58,16 +60,24 @@ export function FloatingPetals() {
             position: "absolute",
             left: `${p.left}%`,
             top: 0,
-            width: p.size,
-            height: p.size * 0.65,
-            borderRadius: "50% 0 50% 0",
-            backgroundColor: p.color,
-            transform: `skewX(${p.skew}deg)`,
+            width: p.size * 1.5,
+            height: p.size * 1.5,
             animation: `petal-drift ${p.duration}s ease-in ${p.delay}s infinite,
                         petal-sway ${p.duration * 0.6}s ease-in-out ${p.delay}s infinite`,
-            boxShadow: `0 1px 4px rgba(0,0,0,0.08)`,
           }}
-        />
+        >
+          <svg
+            viewBox="0 0 30 30"
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "block",
+              transform: `rotate(${p.skew}deg)`,
+            }}
+          >
+            <path d={petalPath} fill={p.color} />
+          </svg>
+        </div>
       ))}
     </div>
   );

@@ -2,6 +2,16 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import audioSrc from "../../imports/La_Vie_en_rose_-_E_dith_Piaf.mp3";
 
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoint);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < breakpoint);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, [breakpoint]);
+  return isMobile;
+}
+
 interface Song {
   title: string;
   artist: string;
@@ -33,6 +43,7 @@ export function BackgroundMusic() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [showPlaylist, setShowPlaylist] = useState(false);
+  const isMobile = useIsMobile();
 
   const currentSong = SONGS[currentIndex];
 
@@ -85,8 +96,8 @@ export function BackgroundMusic() {
 
       <div style={{
         position: "fixed",
-        bottom: "28px",
-        right: "28px",
+        bottom: isMobile ? "12px" : "28px",
+        right: isMobile ? "12px" : "28px",
         zIndex: 9990,
         display: "flex",
         flexDirection: "column",
@@ -107,7 +118,7 @@ export function BackgroundMusic() {
                 borderRadius: "16px",
                 border: "1px solid rgba(184,135,28,0.2)",
                 padding: "8px",
-                minWidth: "220px",
+                minWidth: isMobile ? "180px" : "220px",
                 boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
                 overflow: "hidden",
               }}
@@ -259,7 +270,7 @@ export function BackgroundMusic() {
               padding: "0 10px",
               borderRadius: "8px",
               minWidth: 0,
-              maxWidth: "160px",
+              maxWidth: isMobile ? "80px" : "160px",
             }}
           >
             <p style={{

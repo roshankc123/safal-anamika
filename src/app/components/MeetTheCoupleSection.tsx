@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "motion/react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import bride1 from "../../imports/bride_1.jpg";
@@ -6,6 +6,16 @@ import bride2 from "../../imports/bride_2.jpg";
 import groom1 from "../../imports/groom_1.jpg";
 import groom2 from "../../imports/groom_2.jpg";
 import groom3 from "../../imports/groom_3.jpg";
+
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoint);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < breakpoint);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, [breakpoint]);
+  return isMobile;
+}
 
 function Portrait({
   src,
@@ -73,13 +83,14 @@ export function MeetTheCoupleSection() {
   const titleInView = useInView(titleRef, { once: true });
   const comingSoonRef = useRef<HTMLDivElement>(null);
   const comingSoonInView = useInView(comingSoonRef, { once: true });
+  const isMobile = useIsMobile();
 
   return (
     <section
       id="couple"
       style={{
         background: "linear-gradient(180deg, #FFF8F2 0%, #FDF5EF 100%)",
-        padding: "100px 24px",
+        padding: isMobile ? "60px 16px" : "100px 24px",
         position: "relative",
         overflow: "hidden",
       }}
@@ -95,7 +106,7 @@ export function MeetTheCoupleSection() {
       />
 
       {/* Header */}
-      <div ref={titleRef} style={{ textAlign: "center", marginBottom: "64px" }}>
+      <div ref={titleRef} style={{ textAlign: "center", marginBottom: isMobile ? "48px" : "64px" }}>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={titleInView ? { opacity: 1, y: 0 } : {}}
@@ -116,7 +127,7 @@ export function MeetTheCoupleSection() {
           transition={{ delay: 0.15 }}
           style={{
             fontFamily: "'Great Vibes', cursive",
-            fontSize: "72px",
+            fontSize: isMobile ? "42px" : "72px",
             color: "#6B1A2A",
             lineHeight: 1,
           }}
@@ -129,7 +140,7 @@ export function MeetTheCoupleSection() {
           transition={{ delay: 0.4, duration: 0.8 }}
           style={{
             height: "1px",
-            width: "180px",
+            width: isMobile ? "120px" : "180px",
             margin: "16px auto 0",
             background: "linear-gradient(to right, transparent, #B8871C, transparent)",
           }}
@@ -144,10 +155,10 @@ export function MeetTheCoupleSection() {
           viewport={{ once: true }}
           style={{
             fontFamily: "'Great Vibes', cursive",
-            fontSize: "52px",
+            fontSize: isMobile ? "36px" : "52px",
             color: "#C0395A",
             textAlign: "center",
-            marginBottom: "32px",
+            marginBottom: isMobile ? "24px" : "32px",
           }}
         >
           Anamika
@@ -155,14 +166,14 @@ export function MeetTheCoupleSection() {
         <div
           style={{
             display: "flex",
-            gap: "32px",
+            gap: isMobile ? "20px" : "32px",
             justifyContent: "center",
             alignItems: "flex-end",
             flexWrap: "wrap",
           }}
         >
-          <Portrait src={bride1} alt="Bride in orange saree" delay={0} rotate={-4} size="large" />
-          <Portrait src={bride2} alt="Bride portrait" delay={0.15} rotate={3} size="medium" />
+          <Portrait src={bride1} alt="Bride in orange saree" delay={0} rotate={-4} size={isMobile ? "medium" : "large"} />
+          <Portrait src={bride2} alt="Bride portrait" delay={0.15} rotate={3} size="small" />
         </div>
       </div>
 
@@ -175,7 +186,7 @@ export function MeetTheCoupleSection() {
           animate={{ scale: [1, 1.15, 1] }}
           transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
           style={{
-            fontSize: "48px",
+            fontSize: isMobile ? "36px" : "48px",
             display: "inline-block",
             filter: "drop-shadow(0 4px 12px rgba(192,57,90,0.25))",
           }}
@@ -192,10 +203,10 @@ export function MeetTheCoupleSection() {
           viewport={{ once: true }}
           style={{
             fontFamily: "'Great Vibes', cursive",
-            fontSize: "52px",
+            fontSize: isMobile ? "36px" : "52px",
             color: "#8B4513",
             textAlign: "center",
-            marginBottom: "32px",
+            marginBottom: isMobile ? "24px" : "32px",
           }}
         >
           Safal
@@ -203,15 +214,15 @@ export function MeetTheCoupleSection() {
         <div
           style={{
             display: "flex",
-            gap: "28px",
+            gap: isMobile ? "16px" : "28px",
             justifyContent: "center",
             alignItems: "flex-end",
             flexWrap: "wrap",
           }}
         >
-          <Portrait src={groom2} alt="Groom portrait" delay={0} rotate={-3} size="medium" />
-          <Portrait src={groom1} alt="Groom full body" delay={0.12} rotate={1} size="large" />
-          <Portrait src={groom3} alt="Groom pose" delay={0.24} rotate={4} size="medium" />
+          <Portrait src={groom2} alt="Groom portrait" delay={0} rotate={-3} size={isMobile ? "small" : "medium"} />
+          <Portrait src={groom1} alt="Groom full body" delay={0.12} rotate={1} size={isMobile ? "medium" : "large"} />
+          <Portrait src={groom3} alt="Groom pose" delay={0.24} rotate={4} size={isMobile ? "small" : "medium"} />
         </div>
       </div>
 
@@ -228,7 +239,7 @@ export function MeetTheCoupleSection() {
           background: "#fff",
           border: "1.5px solid rgba(184,135,28,0.25)",
           borderRadius: "20px",
-          padding: "40px 32px",
+          padding: isMobile ? "28px 20px" : "40px 32px",
           boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
         }}
       >
@@ -236,7 +247,7 @@ export function MeetTheCoupleSection() {
         <h3
           style={{
             fontFamily: "'Great Vibes', cursive",
-            fontSize: "40px",
+            fontSize: isMobile ? "32px" : "40px",
             color: "#6B1A2A",
             marginBottom: "10px",
           }}
@@ -247,7 +258,7 @@ export function MeetTheCoupleSection() {
           style={{
             fontFamily: "'Cormorant Garamond', serif",
             fontStyle: "italic",
-            fontSize: "16px",
+            fontSize: isMobile ? "15px" : "16px",
             color: "rgba(44,18,24,0.6)",
             lineHeight: 1.8,
           }}

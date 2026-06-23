@@ -1,8 +1,18 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "motion/react";
 import { useForm } from "react-hook-form";
 import confetti from "canvas-confetti";
 import emailjs from "@emailjs/browser";
+
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoint);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < breakpoint);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, [breakpoint]);
+  return isMobile;
+}
 
 interface RSVPForm {
   name: string;
@@ -32,6 +42,7 @@ export function RSVPSection() {
   const titleInView = useInView(titleRef, { once: true });
   const [submitted, setSubmitted] = useState(false);
   const [sendError, setSendError] = useState<string | null>(null);
+  const isMobile = useIsMobile();
 
   const {
     register,
@@ -97,7 +108,7 @@ export function RSVPSection() {
       id="rsvp"
       style={{
         background: "linear-gradient(180deg, #FFF8F2 0%, #FDF5EE 100%)",
-        padding: "100px 24px",
+        padding: isMobile ? "60px 16px" : "100px 24px",
         position: "relative",
         overflow: "hidden",
       }}
@@ -113,7 +124,7 @@ export function RSVPSection() {
       />
 
       {/* Title */}
-      <div ref={titleRef} style={{ textAlign: "center", marginBottom: "60px" }}>
+      <div ref={titleRef} style={{ textAlign: "center", marginBottom: isMobile ? "40px" : "60px" }}>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={titleInView ? { opacity: 1, y: 0 } : {}}
@@ -134,7 +145,7 @@ export function RSVPSection() {
           transition={{ delay: 0.15 }}
           style={{
             fontFamily: "'Great Vibes', cursive",
-            fontSize: "72px",
+            fontSize: isMobile ? "42px" : "72px",
             color: "#6B1A2A",
             lineHeight: 1,
           }}
@@ -147,7 +158,7 @@ export function RSVPSection() {
           transition={{ delay: 0.4, duration: 0.8 }}
           style={{
             height: "1px",
-            width: "180px",
+            width: isMobile ? "120px" : "180px",
             margin: "16px auto 0",
             background: "linear-gradient(to right, transparent, #B8871C, transparent)",
           }}
@@ -162,7 +173,7 @@ export function RSVPSection() {
         transition={{ delay: 0.25, duration: 0.8 }}
         style={{
           maxWidth: "480px",
-          margin: "0 auto 40px",
+          margin: "0 auto " + (isMobile ? "28px" : "40px"),
           textAlign: "center",
           padding: "0 8px",
         }}
@@ -171,7 +182,7 @@ export function RSVPSection() {
           style={{
             fontFamily: "'Cormorant Garamond', serif",
             fontStyle: "italic",
-            fontSize: "17px",
+            fontSize: isMobile ? "15px" : "17px",
             color: "rgba(44,18,24,0.7)",
             lineHeight: 1.8,
             margin: "0 0 12px",
@@ -207,7 +218,7 @@ export function RSVPSection() {
           background: "#fff",
           border: "1.5px solid rgba(184,135,28,0.2)",
           borderRadius: "24px",
-          padding: "48px 40px",
+          padding: isMobile ? "28px 20px" : "48px 40px",
           boxShadow: "0 8px 40px rgba(0,0,0,0.08)",
           position: "relative",
           overflow: "hidden",
@@ -238,14 +249,14 @@ export function RSVPSection() {
               <motion.div
                 animate={{ scale: [1, 1.2, 1] }}
                 transition={{ duration: 1, repeat: 3 }}
-                style={{ fontSize: "64px", marginBottom: "16px" }}
+                style={{ fontSize: isMobile ? "48px" : "64px", marginBottom: "16px" }}
               >
                 {attendanceVal === "yes" ? "🎉" : "💌"}
               </motion.div>
               <h3
                 style={{
                   fontFamily: "'Great Vibes', cursive",
-                  fontSize: "48px",
+                  fontSize: isMobile ? "36px" : "48px",
                   color: "#6B1A2A",
                   marginBottom: "12px",
                 }}
@@ -272,7 +283,7 @@ export function RSVPSection() {
               initial={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onSubmit={handleSubmit(onSubmit)}
-              style={{ display: "flex", flexDirection: "column", gap: "24px" }}
+              style={{ display: "flex", flexDirection: "column", gap: isMobile ? "16px" : "24px" }}
             >
               {/* Name */}
               <div>
@@ -301,7 +312,7 @@ export function RSVPSection() {
               {/* Attendance */}
               <div>
                 <label style={labelStyle}>Will you attend? *</label>
-                <div style={{ display: "flex", gap: "12px" }}>
+                <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: isMobile ? "8px" : "12px" }}>
                   {(["yes", "no"] as const).map((val) => (
                     <button
                       key={val}
@@ -309,13 +320,13 @@ export function RSVPSection() {
                       onClick={() => setValue("attendance", val)}
                       style={{
                         flex: 1,
-                        padding: "12px",
+                        padding: isMobile ? "14px 12px" : "12px",
                         borderRadius: "10px",
                         border: `1.5px solid ${attendanceVal === val ? "#B8871C" : "rgba(184,135,28,0.25)"}`,
                         background: attendanceVal === val ? "rgba(184,135,28,0.08)" : "#fff",
                         color: attendanceVal === val ? "#8B6914" : "rgba(44,18,24,0.45)",
                         fontFamily: "'Lato', sans-serif",
-                        fontSize: "13px",
+                        fontSize: isMobile ? "12px" : "13px",
                         letterSpacing: "2px",
                         textTransform: "uppercase",
                         cursor: "pointer",

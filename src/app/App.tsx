@@ -11,8 +11,11 @@ import { RSVPSection } from "./components/RSVPSection";
 import { FooterSection } from "./components/FooterSection";
 import { SectionDivider } from "./components/SectionDivider";
 
+const isTouchDevice = typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0);
+
 export default function App() {
   useEffect(() => {
+    if (isTouchDevice) return;
     document.body.style.cursor = "none";
     document.documentElement.style.cursor = "none";
     return () => {
