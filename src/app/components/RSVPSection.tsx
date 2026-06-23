@@ -202,7 +202,7 @@ export function RSVPSection() {
             lineHeight: 1,
           }}
         >
-          — Safal &amp; Anamika
+          — Anamika &amp; Safal
         </p>
       </motion.div>
 

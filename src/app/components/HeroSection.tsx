@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { CountdownTimer } from "./CountdownTimer";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import brideImg from "../../imports/bride_1.jpg";
-import groomImg from "../../imports/groom_1.jpg";
+import groomImg from "../../imports/groom_1.png";
 
 function useScrollOffset(speed: number) {
   const [offset, setOffset] = useState(0);
@@ -262,7 +262,7 @@ export function HeroSection() {
             </p>
 
             <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "6px" }}>
-              {["Safal", "♥", "Anamika"].map((word, i) => (
+              {["Anamika", "♥", "Safal"].map((word, i) => (
                 <motion.span
                   key={word}
                   initial={{ opacity: 0, y: 20 }}
@@ -438,7 +438,7 @@ export function HeroSection() {
             </p>
 
             <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px" }}>
-              {["Safal", "♥", "Anamika"].map((word, i) => (
+              {["Anamika", "♥", "Safal"].map((word, i) => (
                 <motion.span
                   key={word}
                   initial={{ opacity: 0, y: 30 }}

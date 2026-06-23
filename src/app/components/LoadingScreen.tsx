@@ -150,9 +150,9 @@ export function LoadingScreen() {
               <p style={{ fontFamily: "'Lato', sans-serif", fontSize: isMobile ? "8px" : "9px", letterSpacing: "5px", textTransform: "uppercase", color: "rgba(184,135,28,0.65)" }}>
                 The Bride
               </p>
-              <ArchPortrait src={bride2} alt="Anamika" size={portraitSize} />
+              <ArchPortrait src={bride2} alt="Safal" size={portraitSize} />
               <p style={{ fontFamily: "'Great Vibes', cursive", fontSize: nameFontSize, color: TEXT_DARK, lineHeight: 1, marginTop: "4px" }}>
-                Anamika
+                Safal
               </p>
               <GoldDivider width={dividerW} />
             </motion.div>
@@ -180,9 +180,9 @@ export function LoadingScreen() {
               <p style={{ fontFamily: "'Lato', sans-serif", fontSize: isMobile ? "8px" : "9px", letterSpacing: "5px", textTransform: "uppercase", color: "rgba(184,135,28,0.65)" }}>
                 The Groom
               </p>
-              <ArchPortrait src={groom2} alt="Safal" size={portraitSize} />
+              <ArchPortrait src={groom2} alt="Anamika" size={portraitSize} />
               <p style={{ fontFamily: "'Great Vibes', cursive", fontSize: nameFontSize, color: TEXT_DARK, lineHeight: 1, marginTop: "4px" }}>
-                Safal
+                Anamika
               </p>
               <GoldDivider width={dividerW} />
             </motion.div>
