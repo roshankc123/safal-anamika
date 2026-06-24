@@ -96,7 +96,20 @@ export function BackgroundMusic({ songs }: BackgroundMusicProps) {
 
     shouldPlayOnSourceChangeRef.current = true;
     startVolumeRamp(audio, START_VOLUME, COMFORTABLE_VOLUME);
-    audio.play().then(() => setPlaying(true)).catch(() => { });
+    audio.play().then(() => setPlaying(true)).catch(() => {
+      const onInteraction = () => {
+        audio.play().then(() => {
+          setPlaying(true);
+          startVolumeRamp(audio, audio.volume || START_VOLUME, COMFORTABLE_VOLUME);
+        }).catch(() => {});
+        document.removeEventListener("click", onInteraction);
+        document.removeEventListener("touchstart", onInteraction);
+        document.removeEventListener("keydown", onInteraction);
+      };
+      document.addEventListener("click", onInteraction);
+      document.addEventListener("touchstart", onInteraction);
+      document.addEventListener("keydown", onInteraction);
+    });
 
     return () => {
       clearVolumeRamp();

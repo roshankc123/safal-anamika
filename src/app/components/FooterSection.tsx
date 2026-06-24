@@ -229,7 +229,7 @@ export function FooterSection() {
           zIndex: 1,
         }}
       >
-        <p>Mehendi &amp; Wedding — Khaireni Party Palace, Aanboo Khaireni, Tanahun, Nepal</p>
+        <p>Mehendi &amp; Wedding — Bidur Nagarpalika, Nuwakot, Bagmati, Nepal</p>
         <p>Reception — Khaireni Party Palace, Aanboo Khaireni, Tanahun, Nepal</p>
       </motion.div>
 

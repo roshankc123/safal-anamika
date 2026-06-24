@@ -32,7 +32,7 @@ const EVENTS = [
     dayOfWeek: "Thursday",
     time: "",
     venue: "Khaireni Party Palace",
-    location: "Bidur Nagarpalika, Bagmati, Nepal",
+    location: "Bidur Nagarpalika, Nuwakot, Bagmati, Nepal",
     accent: "#C0395A",
     bg: "#FFF0F4",
     glow: "rgba(192,57,90,0.1)",
