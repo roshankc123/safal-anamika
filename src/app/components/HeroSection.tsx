@@ -324,7 +324,7 @@ export function HeroSection() {
                 textTransform: "uppercase",
               }}
             >
-              1 · 2 · 3 July 2026
+              2 · 3 July 2026
             </p>
 
             <CountdownTimer targetDate={WEDDING_DATE} small />
@@ -502,7 +502,7 @@ export function HeroSection() {
                 textAlign: "center",
               }}
             >
-              1 · 2 · 3 July 2026
+              2 · 3 July 2026
             </p>
 
             <CountdownTimer targetDate={WEDDING_DATE} />

@@ -26,10 +26,10 @@ const COMFORTABLE_VOLUME = 0.28;
 const VOLUME_RAMP_MS = 6000;
 const VOLUME_RAMP_STEP_MS = 120;
 
-const btnBase: CSSProperties = {
+const btnBase = (mobile: boolean): CSSProperties => ({
   background: "none",
   border: "none",
-  cursor: "pointer",
+  ...(mobile ? {} : { cursor: "pointer" }),
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -38,16 +38,16 @@ const btnBase: CSSProperties = {
   transition: "background 0.15s",
   padding: 0,
   lineHeight: 1,
-};
+});
 
 export function BackgroundMusic({ songs }: BackgroundMusicProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const volumeRampRef = useRef<number | null>(null);
-  const shouldPlayOnSourceChangeRef = useRef(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
   const [showPlaylist, setShowPlaylist] = useState(false);
+  const [showPlayer, setShowPlayer] = useState(false);
   const isMobile = useIsMobile();
 
   if (songs.length === 0) return null;
@@ -93,8 +93,7 @@ export function BackgroundMusic({ songs }: BackgroundMusicProps) {
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
-
-    shouldPlayOnSourceChangeRef.current = true;
+    audio.volume = START_VOLUME;
     startVolumeRamp(audio, START_VOLUME, COMFORTABLE_VOLUME);
     audio.play().then(() => setPlaying(true)).catch(() => {
       const onInteraction = () => {
@@ -110,10 +109,7 @@ export function BackgroundMusic({ songs }: BackgroundMusicProps) {
       document.addEventListener("touchstart", onInteraction);
       document.addEventListener("keydown", onInteraction);
     });
-
-    return () => {
-      clearVolumeRamp();
-    };
+    return () => clearVolumeRamp();
   }, []);
 
   useEffect(() => {
@@ -130,10 +126,7 @@ export function BackgroundMusic({ songs }: BackgroundMusicProps) {
     audio.src = currentSong.src;
     audio.load();
 
-    const shouldPlay = playing || shouldPlayOnSourceChangeRef.current;
-    shouldPlayOnSourceChangeRef.current = false;
-
-    if (shouldPlay) {
+    if (playing) {
       audio.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
     }
   }, [currentIndex, currentSong.src]);
@@ -173,7 +166,6 @@ export function BackgroundMusic({ songs }: BackgroundMusicProps) {
   };
 
   const selectSong = (index: number) => {
-    shouldPlayOnSourceChangeRef.current = true;
     setCurrentIndex(index);
     setShowPlaylist(false);
 
@@ -191,15 +183,16 @@ export function BackgroundMusic({ songs }: BackgroundMusicProps) {
         ref={audioRef}
         src={currentSong.src}
         preload="auto"
-        autoPlay
         playsInline
         loop
       />
 
       <div style={{
         position: "fixed",
-        bottom: isMobile ? "12px" : "28px",
-        right: isMobile ? "12px" : "28px",
+        left: isMobile ? 0 : undefined,
+        right: isMobile ? 0 : "28px",
+        bottom: isMobile ? 0 : "28px",
+        padding: isMobile ? "0 12px 12px" : undefined,
         zIndex: 9990,
         display: "flex",
         flexDirection: "column",
@@ -215,10 +208,11 @@ export function BackgroundMusic({ songs }: BackgroundMusicProps) {
               exit={{ opacity: 0, y: 8, scale: 0.96 }}
               transition={{ duration: 0.18, ease: "easeOut" }}
               style={{
-                background: "rgba(255,255,255,0.94)",
-                backdropFilter: "blur(20px)",
+                background: "rgba(255,255,255,0.12)",
+                backdropFilter: "blur(20px) saturate(1.4)",
+                WebkitBackdropFilter: "blur(20px) saturate(1.4)",
                 borderRadius: "16px",
-                border: "1px solid rgba(184,135,28,0.2)",
+                border: "1px solid rgba(255,255,255,0.6)",
                 padding: "8px",
                 minWidth: isMobile ? "180px" : "220px",
                 boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
@@ -252,7 +246,7 @@ export function BackgroundMusic({ songs }: BackgroundMusicProps) {
                       border: "none",
                       borderRadius: "10px",
                       background: active ? "rgba(184,135,28,0.1)" : "transparent",
-                      cursor: "pointer",
+                      ...(isMobile ? {} : { cursor: "pointer" }),
                       textAlign: "left",
                       width: "100%",
                       transition: "background 0.15s",
@@ -296,139 +290,199 @@ export function BackgroundMusic({ songs }: BackgroundMusicProps) {
           )}
         </AnimatePresence>
 
-        {/* Mini player bar */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 2, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        {/* Player controls (expanded) */}
+        <AnimatePresence>
+          {showPlayer && (
+            <motion.div
+              initial={{ opacity: 0, y: 12, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 8, scale: 0.96 }}
+              transition={{ duration: 0.18, ease: "easeOut" }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 0,
+                background: "rgba(255,255,255,0.12)",
+                backdropFilter: "blur(20px) saturate(1.4)",
+                WebkitBackdropFilter: "blur(20px) saturate(1.4)",
+                borderRadius: isMobile ? "16px" : "28px",
+                border: "1px solid rgba(255,255,255,0.6)",
+                boxShadow: isMobile ? "0 -2px 20px rgba(0,0,0,0.12)" : "0 4px 24px rgba(0,0,0,0.1)",
+                height: "48px",
+                width: isMobile ? "100%" : undefined,
+                overflow: "hidden",
+              }}
+            >
+              {/* Play / Pause circle */}
+              <button
+                onClick={toggle}
+                style={{
+                  ...btnBase(isMobile),
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "50%",
+                  fontSize: "16px",
+                  flexShrink: 0,
+                }}
+              >
+                {playing ? <span style={{ lineHeight: 1 }}>⏸</span> : <span style={{ lineHeight: 1 }}>▶</span>}
+              </button>
+
+              {/* Mute / Unmute */}
+              <button
+                onClick={toggleMute}
+                onMouseEnter={e => { e.currentTarget.style.background = "rgba(0,0,0,0.06)"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = ""; }}
+                style={{
+                  ...btnBase(isMobile),
+                  fontSize: "12px",
+                  width: "28px",
+                  height: "28px",
+                  flexShrink: 0,
+                  marginLeft: 2,
+                }}
+                aria-label={muted ? "Unmute" : "Mute"}
+                title={muted ? "Unmute" : "Mute"}
+              >
+                {muted ? "🔇" : "🔊"}
+              </button>
+
+              {/* Prev */}
+              <button
+                onClick={prev}
+                onMouseEnter={e => { e.currentTarget.style.background = "rgba(0,0,0,0.06)"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = ""; }}
+                style={{
+                  ...btnBase(isMobile),
+                  fontSize: "12px",
+                  width: "28px",
+                  height: "28px",
+                  flexShrink: 0,
+                  marginLeft: 2,
+                }}
+              >
+                ⏮
+              </button>
+
+              {/* Song info — click to open playlist */}
+              <button
+                onClick={() => setShowPlaylist(prev => !prev)}
+                onMouseEnter={e => { e.currentTarget.style.background = "rgba(0,0,0,0.04)"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = ""; }}
+                style={{
+                  ...btnBase(isMobile),
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  gap: 0,
+                  padding: "0 10px",
+                  borderRadius: "8px",
+                  minWidth: 0,
+                  flex: isMobile ? 1 : undefined,
+                }}
+              >
+                <p style={{
+                  margin: 0,
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontSize: "13px",
+                  color: "#2D1810",
+                  fontStyle: "italic",
+                  lineHeight: 1.3,
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  maxWidth: "100%",
+                }}>
+                  {currentSong.title}
+                </p>
+                <p style={{
+                  margin: 0,
+                  fontFamily: "'Lato', sans-serif",
+                  fontSize: "9px",
+                  color: "#8B7355",
+                  lineHeight: 1.2,
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  maxWidth: "100%",
+                }}>
+                  {currentSong.artist}
+                </p>
+              </button>
+
+              {/* Next */}
+              <button
+                onClick={next}
+                onMouseEnter={e => { e.currentTarget.style.background = "rgba(0,0,0,0.06)"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = ""; }}
+                style={{
+                  ...btnBase(isMobile),
+                  fontSize: "12px",
+                  width: "28px",
+                  height: "28px",
+                  flexShrink: 0,
+                  marginRight: 6,
+                }}
+              >
+                ⏭
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Record toggle button */}
+        <motion.button
+          onClick={() => setShowPlayer(p => !p)}
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.9 }}
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 0,
-            background: "rgba(255,255,255,0.88)",
-            backdropFilter: "blur(14px)",
-            borderRadius: "28px",
-            border: "1.5px solid rgba(184,135,28,0.3)",
+            ...btnBase(isMobile),
+            width: "44px",
+            height: "44px",
+            borderRadius: "50%",
+            background: "rgba(255,255,255,0.12)",
+            backdropFilter: "blur(20px) saturate(1.4)",
+            WebkitBackdropFilter: "blur(20px) saturate(1.4)",
+            border: "1px solid rgba(255,255,255,0.6)",
             boxShadow: "0 4px 24px rgba(0,0,0,0.1)",
-            height: "48px",
             overflow: "hidden",
+            color: "#B8871C",
+            fontSize: "18px",
           }}
         >
-          {/* Play / Pause circle */}
-          <motion.button
-            onClick={toggle}
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.9 }}
+          <motion.div
+            animate={playing ? { rotate: 360 } : { rotate: 0 }}
+            transition={playing
+              ? { repeat: Infinity, duration: 3, ease: "linear" }
+              : { duration: 0.4, ease: "easeOut" }
+            }
             style={{
-              ...btnBase,
-              width: "40px",
-              height: "40px",
+              width: "100%",
+              height: "100%",
               borderRadius: "50%",
-              fontSize: "16px",
-              flexShrink: 0,
+              background: "conic-gradient(from 0deg, #1a1a1a, #333, #1a1a1a, #444, #1a1a1a)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            {playing ? <span style={{ lineHeight: 1 }}>⏸</span> : <span style={{ lineHeight: 1 }}>▶</span>}
-          </motion.button>
-
-          {/* Mute / Unmute */}
-          <button
-            onClick={toggleMute}
-            onMouseEnter={e => { e.currentTarget.style.background = "rgba(0,0,0,0.06)"; }}
-            onMouseLeave={e => { e.currentTarget.style.background = ""; }}
-            style={{
-              ...btnBase,
-              fontSize: "12px",
-              width: "28px",
-              height: "28px",
-              flexShrink: 0,
-              marginLeft: 2,
-            }}
-            aria-label={muted ? "Unmute" : "Mute"}
-            title={muted ? "Unmute" : "Mute"}
-          >
-            {muted ? "🔇" : "🔊"}
-          </button>
-
-          {/* Prev */}
-          <button
-            onClick={prev}
-            onMouseEnter={e => { e.currentTarget.style.background = "rgba(0,0,0,0.06)"; }}
-            onMouseLeave={e => { e.currentTarget.style.background = ""; }}
-            style={{
-              ...btnBase,
-              fontSize: "12px",
-              width: "28px",
-              height: "28px",
-              flexShrink: 0,
-              marginLeft: 2,
-            }}
-          >
-            ⏮
-          </button>
-
-          {/* Song info — click to open playlist */}
-          <button
-            onClick={() => setShowPlaylist(prev => !prev)}
-            onMouseEnter={e => { e.currentTarget.style.background = "rgba(0,0,0,0.04)"; }}
-            onMouseLeave={e => { e.currentTarget.style.background = ""; }}
-            style={{
-              ...btnBase,
-              flexDirection: "column",
-              alignItems: "flex-start",
-              gap: 0,
-              padding: "0 10px",
-              borderRadius: "8px",
-              minWidth: 0,
-              maxWidth: isMobile ? "80px" : "160px",
-            }}
-          >
-            <p style={{
-              margin: 0,
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: "13px",
-              color: "#2D1810",
-              fontStyle: "italic",
-              lineHeight: 1.3,
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              maxWidth: "100%",
+            <div style={{
+              width: "16px",
+              height: "16px",
+              borderRadius: "50%",
+              background: "linear-gradient(135deg, #B8871C, #8B6B15)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}>
-              {currentSong.title}
-            </p>
-            <p style={{
-              margin: 0,
-              fontFamily: "'Lato', sans-serif",
-              fontSize: "9px",
-              color: "#8B7355",
-              lineHeight: 1.2,
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              maxWidth: "100%",
-            }}>
-              {currentSong.artist}
-            </p>
-          </button>
-
-          {/* Next */}
-          <button
-            onClick={next}
-            onMouseEnter={e => { e.currentTarget.style.background = "rgba(0,0,0,0.06)"; }}
-            onMouseLeave={e => { e.currentTarget.style.background = ""; }}
-            style={{
-              ...btnBase,
-              fontSize: "12px",
-              width: "28px",
-              height: "28px",
-              flexShrink: 0,
-              marginRight: 6,
-            }}
-          >
-            ⏭
-          </button>
-        </motion.div>
+              <div style={{
+                width: "6px",
+                height: "6px",
+                borderRadius: "50%",
+                background: "#2D1810",
+              }} />
+            </div>
+          </motion.div>
+        </motion.button>
       </div>
     </>
   );

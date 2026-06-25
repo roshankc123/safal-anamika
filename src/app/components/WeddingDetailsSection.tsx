@@ -15,8 +15,8 @@ const EVENTS = [
   {
     emoji: "🌿",
     name: "Mehendi",
-    date: "1st July 2026",
-    dayOfWeek: "Wednesday",
+    date: "30th June 2026",
+    dayOfWeek: "Tuesday",
     time: "",
     venue: "Khaireni Party Palace",
     location: "Aanboo Khaireni, Tanahun, Nepal",

@@ -161,7 +161,7 @@ export function FooterSection() {
           zIndex: 1,
         }}
       >
-        1 · 2 · 3 July 2026 · Aanboo Khaireni, Nepal
+        2 · 3 July 2026 · Aanboo Khaireni, Nepal
       </motion.p>
 
       {/* Ornament */}

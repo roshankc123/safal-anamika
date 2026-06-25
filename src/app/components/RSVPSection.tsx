@@ -379,8 +379,8 @@ export function RSVPSection({ locationBucket, countryCode }: RSVPSectionProps) {
                     backgroundPosition: "right 14px center",
                   }}
                 >
-                  <option value="all">All three days (1, 2 &amp; 3 July)</option>
-                  <option value="mehendi">Mehendi only (1 July)</option>
+                  <option value="all">All three days (30 June, 2 &amp; 3 July)</option>
+                  <option value="mehendi">Mehendi only (30 June)</option>
                   <option value="wedding">Wedding only (2 July)</option>
                   <option value="reception">Reception only (3 July)</option>
                   <option value="wedding+reception">Wedding &amp; Reception (2 &amp; 3 July)</option>

@@ -264,7 +264,7 @@ export function LoadingScreen() {
                 </p>
                 <GoldDivider width={centerDivW} />
                 <p style={{ fontFamily: "'Lato', sans-serif", fontSize: "8px", letterSpacing: "3px", textTransform: "uppercase", color: "rgba(44,18,24,0.4)", marginTop: "8px", textAlign: "center", lineHeight: 1.8, whiteSpace: "nowrap" }}>
-                  1 · 2 · 3<br />July 2026
+                  2 · 3<br />July 2026
                 </p>
                 <div style={{ width: "1px", flex: 1, background: `linear-gradient(to top, transparent, ${BORDER_GOLD})`, marginTop: "12px" }} />
               </>

@@ -45,7 +45,7 @@ const MILESTONES = [
   {
     icon: "🎊",
     title: "Our New Beginning",
-    subtitle: "1 · 2 · 3 July 2026",
+    subtitle: "2 · 3 July 2026",
     description:
       "Three days of celebration, joy, and togetherness. We can't wait to share our happiness with the people we love most.",
     accent: "#C0395A",

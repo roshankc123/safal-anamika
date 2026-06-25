@@ -161,7 +161,7 @@ export function MeetTheCoupleSection() {
             marginBottom: isMobile ? "24px" : "32px",
           }}
         >
-          Safal
+          Anamika
         </motion.p>
         <div
           style={{
@@ -209,7 +209,7 @@ export function MeetTheCoupleSection() {
             marginBottom: isMobile ? "24px" : "32px",
           }}
         >
-          Anamika
+          Safal
         </motion.p>
         <div
           style={{
